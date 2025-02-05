@@ -1,0 +1,65 @@
+package com.example.moviemues.ui.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import androidx.compose.ui.Alignment // Added this import
+import com.example.moviemues.model.Movie
+
+@Composable
+fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .height(200.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = 4.dp
+    ) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = rememberImagePainter(data = "https://image.tmdb.org/t/p/w500${movie.posterPath}"), // Use posterPath
+                contentDescription = movie.title,
+                modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = movie.title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Rating: ${movie.rating}",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+                Button(
+                    onClick = { /* Handle favorite action */ },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(text = "Add to Watchlist")
+                }
+            }
+        }
+    }
+}
