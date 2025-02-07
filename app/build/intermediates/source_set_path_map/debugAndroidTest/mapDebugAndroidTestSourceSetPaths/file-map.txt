@@ -1,5 +1,0 @@
-com.example.moviemues.test.app-core-1.6.1-0 /Users/jilamika/.gradle/caches/8.9/transforms/d3992c2c1c5e8e74a5dd8431d8aef4a0/transformed/core-1.6.1/res
-com.example.moviemues.test.app-androidTest-1 /Users/jilamika/Workspace/ABAC/2024_2/CSX4109/MovieMuse/app/build/generated/res/resValues/androidTest/debug
-com.example.moviemues.test.app-mergeDebugAndroidTestResources-2 /Users/jilamika/Workspace/ABAC/2024_2/CSX4109/MovieMuse/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
-com.example.moviemues.test.app-mergeDebugAndroidTestResources-3 /Users/jilamika/Workspace/ABAC/2024_2/CSX4109/MovieMuse/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
-com.example.moviemues.test.app-debugAndroidTest-4 /Users/jilamika/Workspace/ABAC/2024_2/CSX4109/MovieMuse/app/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources
