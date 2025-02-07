@@ -3,50 +3,94 @@ package com.example.moviemues
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.moviemuse.ui.theme.MovieMuseTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.moviemues.ui.theme.MovieMuseTheme
+import com.example.moviemuse.ui.theme.MovieListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MovieMuseTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("MovieMuse")
-                }
+                val navController = rememberNavController()  // This returns NavHostController
+                MainScreen(navController)
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Welcome to $name!", style = MaterialTheme.typography.headlineLarge)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { /* TODO: Add action */ }) {
-            Text("Get Started")
+fun BottomNavBar(navController: NavHostController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home") },
+            selected = currentRoute == "home",
+            onClick = { navController.navigate("home") { launchSingleTop = true } }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
+            label = { Text("Favorites") },
+            selected = currentRoute == "favorites",
+            onClick = { navController.navigate("favorites") { launchSingleTop = true } }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            label = { Text("Search") },
+            selected = currentRoute == "search",
+            onClick = { navController.navigate("search") { launchSingleTop = true } }
+        )
+    }
+}
+
+@Composable
+fun MainScreen(navController: NavHostController) {
+    Scaffold(
+        bottomBar = { BottomNavBar(navController) }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("home") { MovieListScreen() }
+            composable("favorites") { FavoritesScreen() }
+            composable("search") { SearchScreen() }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    MovieMuseTheme {
-        Greeting("MovieMuse")
-    }
+fun FavoritesScreen() {
+    Text(
+        text = "Favorites",
+        style = MaterialTheme.typography.headlineMedium,
+        modifier = Modifier.padding(16.dp)
+    )
+}
+
+@Composable
+fun SearchScreen() {
+    Text(
+        text = "Search",
+        style = MaterialTheme.typography.headlineMedium,
+        modifier = Modifier.padding(16.dp)
+    )
 }

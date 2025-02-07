@@ -1,0 +1,3 @@
+com.example.moviemues.test
+style WhiteBackgroundDialogTheme
+style WhiteBackgroundTheme

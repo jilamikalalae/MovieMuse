@@ -33,7 +33,7 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
         Row(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
                 model = ImageRequest.Builder(context) // <-- Explicitly pass context here
-                    .data("https://image.tmdb.org/t/p/w500${movie.posterPath}") // Use posterPath
+                    .data(movie.posterPath) // Use posterPath
                     .crossfade(true) // Optional: Enables crossfade animation
                     .build(),
                 contentDescription = movie.title,
