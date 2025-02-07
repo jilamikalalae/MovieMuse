@@ -8,7 +8,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviemues.ui.components.MovieCard
 import viewmodel.MovieViewModel
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.Modifier // Added this import
+import androidx.compose.ui.Modifier
+import com.example.moviemues.model.Movie
+import androidx.compose.foundation.lazy.items // Ensure this import is present
 
 @Composable
 fun MovieListScreen(viewModel: MovieViewModel = viewModel()) {
@@ -18,9 +20,11 @@ fun MovieListScreen(viewModel: MovieViewModel = viewModel()) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "Popular Movies", style = MaterialTheme.typography.h5)
         LazyColumn {
+            // Use 'items' with the correct parameter for the list of Movie objects
             items(movies) { movie ->
                 MovieCard(movie)
             }
         }
     }
 }
+

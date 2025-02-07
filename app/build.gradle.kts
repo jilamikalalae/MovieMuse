@@ -18,17 +18,18 @@ android {
         val propertiesFile = rootProject.file("local.properties")
         val properties = mutableMapOf<String, String>()
 
-        if (propertiesFile.exists()) {
+        if (propertiesFile.exists()) { //edited code (causing issues from previous code)
             propertiesFile.forEachLine { line ->
-                val (key, value) = line.split("=")
-                properties[key.trim()] = value.trim()
+                if (line.contains("=")) {
+                    val (key, value) = line.split("=", limit = 2)
+                    properties[key.trim()] = value.trim()
+                }
             }
         }
 
         val apiKey = properties["API_KEY"] ?: ""
 
-        buildConfigField("String", "API_KEY", "\"$apiKey\"")
-    }
+        buildConfigField("String", "TMDB_API_KEY", "\"$apiKey\"")    }
 
     buildTypes {
         release {
@@ -46,6 +47,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true // do not remove, resolved error with disabled buildconfig
     }
 
     kotlinOptions {

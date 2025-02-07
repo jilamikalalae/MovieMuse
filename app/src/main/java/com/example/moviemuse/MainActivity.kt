@@ -1,4 +1,4 @@
-package com.example.moviemuse
+package com.example.moviemues
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

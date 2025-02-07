@@ -8,133 +8,137 @@
 8        android:minSdkVersion="21"
 9        android:targetSdkVersion="34" />
 10
-11    <permission
-11-->[androidx.core:core:1.13.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\930871fd39996fe184df264b59e0829c\transformed\core-1.13.0\AndroidManifest.xml:22:5-24:47
-12        android:name="com.example.moviemues.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-12-->[androidx.core:core:1.13.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\930871fd39996fe184df264b59e0829c\transformed\core-1.13.0\AndroidManifest.xml:23:9-81
-13        android:protectionLevel="signature" />
-13-->[androidx.core:core:1.13.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\930871fd39996fe184df264b59e0829c\transformed\core-1.13.0\AndroidManifest.xml:24:9-44
-14
-15    <uses-permission android:name="com.example.moviemues.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-15-->[androidx.core:core:1.13.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\930871fd39996fe184df264b59e0829c\transformed\core-1.13.0\AndroidManifest.xml:26:5-97
-15-->[androidx.core:core:1.13.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\930871fd39996fe184df264b59e0829c\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:6:5-67
+11-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:6:22-64
+12
+13    <permission
+13-->[androidx.core:core:1.13.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/AndroidManifest.xml:22:5-24:47
+14        android:name="com.example.moviemues.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+14-->[androidx.core:core:1.13.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/AndroidManifest.xml:23:9-81
+15        android:protectionLevel="signature" />
+15-->[androidx.core:core:1.13.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/AndroidManifest.xml:24:9-44
 16
-17    <application
-17-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:5:5-26:19
-18        android:allowBackup="true"
-18-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:6:9-35
-19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-19-->[androidx.core:core:1.13.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\930871fd39996fe184df264b59e0829c\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
-20        android:dataExtractionRules="@xml/data_extraction_rules"
-20-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:7:9-65
-21        android:debuggable="true"
-22        android:extractNativeLibs="true"
-23        android:fullBackupContent="@xml/backup_rules"
-23-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:8:9-54
-24        android:icon="@mipmap/ic_launcher"
-24-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:9:9-43
-25        android:label="@string/app_name"
-25-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:10:9-41
-26        android:roundIcon="@mipmap/ic_launcher_round"
-26-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:11:9-54
-27        android:supportsRtl="true"
-27-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:12:9-35
-28        android:testOnly="true"
-29        android:theme="@style/Theme.MovieMuse" >
-29-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:13:9-47
-30        <activity
-30-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:15:9-25:20
-31            android:name="com.example.moviemues.MainActivity"
-31-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:16:13-41
-32            android:exported="true"
-32-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:17:13-36
-33            android:label="@string/app_name"
-33-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:18:13-45
-34            android:theme="@style/Theme.MovieMuse" >
-34-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:19:13-51
-35            <intent-filter>
-35-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:20:13-24:29
-36                <action android:name="android.intent.action.MAIN" />
-36-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:21:17-69
-36-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:21:25-66
-37
-38                <category android:name="android.intent.category.LAUNCHER" />
-38-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:23:17-77
-38-->C:\NongIce\MovieMuse-main\app\src\main\AndroidManifest.xml:23:27-74
-39            </intent-filter>
-40        </activity>
-41        <activity
-41-->[androidx.compose.ui:ui-tooling-android:1.6.6] C:\Users\jeffr\.gradle\caches\8.9\transforms\68552440910dec286c68885f823349b9\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
-42            android:name="androidx.compose.ui.tooling.PreviewActivity"
-42-->[androidx.compose.ui:ui-tooling-android:1.6.6] C:\Users\jeffr\.gradle\caches\8.9\transforms\68552440910dec286c68885f823349b9\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
-43            android:exported="true" />
-43-->[androidx.compose.ui:ui-tooling-android:1.6.6] C:\Users\jeffr\.gradle\caches\8.9\transforms\68552440910dec286c68885f823349b9\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
-44
-45        <provider
-45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-46            android:name="androidx.startup.InitializationProvider"
-46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
-47            android:authorities="com.example.moviemues.androidx-startup"
-47-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
-48            android:exported="false" >
-48-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
-49            <meta-data
-49-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-50                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-50-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
-51                android:value="androidx.startup" />
-51-->[androidx.emoji2:emoji2:1.3.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\616dcc137d93b876453bdb15382857d5\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
-52            <meta-data
-52-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\jeffr\.gradle\caches\8.9\transforms\19e89193973d09b316635d11d0a345bf\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
-53                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-53-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\jeffr\.gradle\caches\8.9\transforms\19e89193973d09b316635d11d0a345bf\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
-54                android:value="androidx.startup" />
-54-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\jeffr\.gradle\caches\8.9\transforms\19e89193973d09b316635d11d0a345bf\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
-55            <meta-data
-55-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
-56                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-56-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
-57                android:value="androidx.startup" />
-57-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
-58        </provider>
-59
-60        <receiver
-60-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
-61            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-61-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
-62            android:directBootAware="false"
-62-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
-63            android:enabled="true"
-63-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
-64            android:exported="true"
-64-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
-65            android:permission="android.permission.DUMP" >
-65-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
-66            <intent-filter>
-66-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
-67                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-67-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
-67-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
-68            </intent-filter>
-69            <intent-filter>
-69-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
-70                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-70-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
-70-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
-71            </intent-filter>
-72            <intent-filter>
-72-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
-73                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-73-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
-73-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
-74            </intent-filter>
-75            <intent-filter>
-75-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
-76                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
-76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\jeffr\.gradle\caches\8.9\transforms\25fa682a9157458d51d9bde2eecadfa1\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
-77            </intent-filter>
-78        </receiver>
-79    </application>
-80
-81</manifest>
+17    <uses-permission android:name="com.example.moviemues.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+17-->[androidx.core:core:1.13.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/AndroidManifest.xml:26:5-97
+17-->[androidx.core:core:1.13.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/AndroidManifest.xml:26:22-94
+18
+19    <application
+19-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:7:5-28:19
+20        android:allowBackup="true"
+20-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:8:9-35
+21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+21-->[androidx.core:core:1.13.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
+22        android:dataExtractionRules="@xml/data_extraction_rules"
+22-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:9:9-65
+23        android:debuggable="true"
+24        android:extractNativeLibs="true"
+25        android:fullBackupContent="@xml/backup_rules"
+25-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:10:9-54
+26        android:icon="@mipmap/ic_launcher"
+26-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:11:9-43
+27        android:label="@string/app_name"
+27-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:12:9-41
+28        android:roundIcon="@mipmap/ic_launcher_round"
+28-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:13:9-54
+29        android:supportsRtl="true"
+29-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:14:9-35
+30        android:testOnly="true"
+31        android:theme="@style/Theme.MovieMuse" >
+31-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:15:9-47
+32        <activity
+32-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:17:9-27:20
+33            android:name="com.example.moviemues.MainActivity"
+33-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:18:13-41
+34            android:exported="true"
+34-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:19:13-36
+35            android:label="@string/app_name"
+35-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:20:13-45
+36            android:theme="@style/Theme.MovieMuse" >
+36-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:21:13-51
+37            <intent-filter>
+37-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:22:13-26:29
+38                <action android:name="android.intent.action.MAIN" />
+38-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:23:17-69
+38-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:23:25-66
+39
+40                <category android:name="android.intent.category.LAUNCHER" />
+40-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:25:17-77
+40-->/Users/juli/Desktop/MovieMuse/app/src/main/AndroidManifest.xml:25:27-74
+41            </intent-filter>
+42        </activity>
+43        <activity
+43-->[androidx.compose.ui:ui-tooling-android:1.6.6] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/68552440910dec286c68885f823349b9/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+44            android:name="androidx.compose.ui.tooling.PreviewActivity"
+44-->[androidx.compose.ui:ui-tooling-android:1.6.6] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/68552440910dec286c68885f823349b9/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+45            android:exported="true" />
+45-->[androidx.compose.ui:ui-tooling-android:1.6.6] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/68552440910dec286c68885f823349b9/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+46
+47        <provider
+47-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+48            android:name="androidx.startup.InitializationProvider"
+48-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+49            android:authorities="com.example.moviemues.androidx-startup"
+49-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+50            android:exported="false" >
+50-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+51            <meta-data
+51-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+52                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+52-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+53                android:value="androidx.startup" />
+53-->[androidx.emoji2:emoji2:1.3.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/616dcc137d93b876453bdb15382857d5/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+54            <meta-data
+54-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/19e89193973d09b316635d11d0a345bf/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
+55                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+55-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/19e89193973d09b316635d11d0a345bf/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
+56                android:value="androidx.startup" />
+56-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/19e89193973d09b316635d11d0a345bf/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
+57            <meta-data
+57-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+58                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+58-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+59                android:value="androidx.startup" />
+59-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+60        </provider>
+61
+62        <receiver
+62-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+63            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+63-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+64            android:directBootAware="false"
+64-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+65            android:enabled="true"
+65-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+66            android:exported="true"
+66-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+67            android:permission="android.permission.DUMP" >
+67-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+68            <intent-filter>
+68-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+69                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+69-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+69-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+70            </intent-filter>
+71            <intent-filter>
+71-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+72                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+72-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+72-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+73            </intent-filter>
+74            <intent-filter>
+74-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+75                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+75-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+75-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+76            </intent-filter>
+77            <intent-filter>
+77-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+78                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+78-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+78-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/juli/Desktop/MovieMuse/caches/8.9/transforms/25fa682a9157458d51d9bde2eecadfa1/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+79            </intent-filter>
+80        </receiver>
+81    </application>
+82
+83</manifest>

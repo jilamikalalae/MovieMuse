@@ -22,8 +22,8 @@ class MovieViewModel : ViewModel() {
     private fun fetchMovies() {
         viewModelScope.launch {
             // Fetch movies and update state
-            val fetchedMovies = repository.fetchPopularMovies()
-            _movies.value = fetchedMovies
+            val fetchedMovies = repository.fetchPopularMovies() // This now returns List<Movie>
+            _movies.value = fetchedMovies // Set the list of movies to the state flow
         }
     }
 }

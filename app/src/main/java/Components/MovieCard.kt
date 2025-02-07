@@ -12,12 +12,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberImagePainter
-import androidx.compose.ui.Alignment // Added this import
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext // <-- Import LocalContext
 import com.example.moviemues.model.Movie
 
 @Composable
 fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
+    val context = LocalContext.current // <-- Get the context
+
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -27,8 +31,11 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
         elevation = 4.dp
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = rememberImagePainter(data = "https://image.tmdb.org/t/p/w500${movie.posterPath}"), // Use posterPath
+            AsyncImage(
+                model = ImageRequest.Builder(context) // <-- Explicitly pass context here
+                    .data("https://image.tmdb.org/t/p/w500${movie.posterPath}") // Use posterPath
+                    .crossfade(true) // Optional: Enables crossfade animation
+                    .build(),
                 contentDescription = movie.title,
                 modifier = Modifier
                     .weight(0.4f)
@@ -63,3 +70,4 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
         }
     }
 }
+

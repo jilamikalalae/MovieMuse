@@ -4,7 +4,7 @@
             "outputFile": "com.example.moviemues.app-mergeDebugResources-2:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\jeffr\\.gradle\\caches\\8.9\\transforms\\930871fd39996fe184df264b59e0829c\\transformed\\core-1.13.0\\res\\values-v21\\values-v21.xml",
+                    "source": "/Users/juli/Desktop/MovieMuse/caches/8.9/transforms/930871fd39996fe184df264b59e0829c/transformed/core-1.13.0/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
