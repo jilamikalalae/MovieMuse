@@ -1,5 +1,7 @@
 package com.example.moviemues.repository
 
+import android.util.Log
+import com.example.moviemues.BuildConfig
 import com.example.moviemues.Network.MovieApiService
 import com.example.moviemues.Network.RetrofitClient
 import com.example.moviemues.model.Movie
@@ -13,11 +15,19 @@ class MovieRepository {
 
     suspend fun fetchPopularMovies(): List<Movie> {
         return withContext(Dispatchers.IO) {
-            val apiKey = "your_api_key_here" // Replace with actual API key
-            val page = 1 // Adjust page as needed
+            val apiKey = BuildConfig.TMDB_API_KEY // Replace with actual API key
+            val page = 1
 
             val response: MovieResponse = movieApiService.getPopularMovies(apiKey, page)
-            response.results // Extract the movie list
+
+            val updatedMovies = response.results.map { movie ->
+                movie.copy(posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath)
+            }
+
+            Log.d("data", updatedMovies.toString())
+
+            updatedMovies
         }
     }
+
 }
