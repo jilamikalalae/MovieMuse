@@ -1,4 +1,4 @@
-package com.example.moviemues.ui.components
+package com.example.moviemuse.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,7 +16,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext // <-- Import LocalContext
-import com.example.moviemues.model.Movie
+import com.example.moviemuse.model.Movie
 
 @Composable
 fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {

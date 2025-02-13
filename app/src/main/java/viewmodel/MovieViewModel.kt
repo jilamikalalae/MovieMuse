@@ -1,12 +1,14 @@
-package viewmodel
+package com.example.moviemuse.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviemues.repository.MovieRepository
+import com.example.moviemuse.BuildConfig
+import com.example.moviemuse.repository.MovieRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.example.moviemues.model.Movie
+import com.example.moviemuse.model.Movie
 
 class MovieViewModel : ViewModel() {
     private val repository = MovieRepository()
@@ -21,9 +23,17 @@ class MovieViewModel : ViewModel() {
 
     private fun fetchMovies() {
         viewModelScope.launch {
-            // Fetch movies and update state
-            val fetchedMovies = repository.fetchPopularMovies() // This now returns List<Movie>
-            _movies.value = fetchedMovies // Set the list of movies to the state flow
+            try {
+                val fetchedMovies = repository.fetchPopularMovies() ?: emptyList()
+                Log.d("MovieViewModel", "Fetched Movies: $fetchedMovies")
+                val updatedMovies = fetchedMovies.map { movie ->
+                    movie.copy(posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath)
+                }
+                _movies.value = updatedMovies
+
+            } catch (e: Exception) {
+                Log.e("MovieViewModel", "Error fetching movies $e", e)
+            }
         }
     }
 }

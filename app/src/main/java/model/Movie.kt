@@ -1,4 +1,4 @@
-package com.example.moviemues.model
+package com.example.moviemuse.model
 
 import com.google.gson.annotations.SerializedName
 

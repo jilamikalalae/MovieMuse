@@ -1,8 +1,8 @@
-package com.example.moviemues.Network
+package com.example.moviemuse.Network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import com.example.moviemues.model.MovieResponse
+import com.example.moviemuse.model.MovieResponse
 
 interface MovieApiService {
     @GET("movie/popular")

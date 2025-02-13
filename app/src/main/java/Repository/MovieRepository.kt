@@ -1,11 +1,11 @@
-package com.example.moviemues.repository
+package com.example.moviemuse.repository
 
 import android.util.Log
-import com.example.moviemues.BuildConfig
-import com.example.moviemues.Network.MovieApiService
-import com.example.moviemues.Network.RetrofitClient
-import com.example.moviemues.model.Movie
-import com.example.moviemues.model.MovieResponse
+import com.example.moviemuse.BuildConfig
+import com.example.moviemuse.Network.MovieApiService
+import com.example.moviemuse.Network.RetrofitClient
+import com.example.moviemuse.model.Movie
+import com.example.moviemuse.model.MovieResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -20,13 +20,16 @@ class MovieRepository {
 
             val response: MovieResponse = movieApiService.getPopularMovies(apiKey, page)
 
-            val updatedMovies = response.results.map { movie ->
-                movie.copy(posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath)
-            }
 
-            Log.d("data", updatedMovies.toString())
+//            Log.d("response", response.toString())
+//
+//            val updatedMovies = response.results.map { movie ->
+//                movie.copy(posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath)
+//            }
+//
+//            Log.d("data", updatedMovies.toString())
 
-            updatedMovies
+            response.results
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.moviemues.ui.theme
+package com.example.moviemuse.ui.theme
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
