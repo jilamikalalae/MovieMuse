@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.moviemues"
+    namespace = "com.example.moviemuse"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.moviemues"
+        applicationId = "com.example.moviemuse"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
@@ -30,10 +30,13 @@ android {
         }
 
         val apiKey = properties["API_KEY"] ?: ""
-        val tmdbBaseUrl = properties["TMDB_BASE_IMAGE_URL"] ?: ""
+        val tmdbBaseImageUrl = properties["TMDB_BASE_IMAGE_URL"] ?: ""
+        val tmdbBaseUrl = properties["TMDB_BASE_URL"] ?: ""
+
 
         buildConfigField("String", "TMDB_API_KEY", "\"$apiKey\"")
-        buildConfigField("String","TMDB_BASE_IMAGE_URL", "\"$tmdbBaseUrl\"")
+        buildConfigField("String","TMDB_BASE_IMAGE_URL", "\"$tmdbBaseImageUrl\"")
+        buildConfigField("String","TMDB_BASE_URL", "\"$tmdbBaseUrl\"")
     }
 
 

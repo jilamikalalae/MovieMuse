@@ -8,8 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*  // Ensure you're using Material 3
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
-import viewmodel.MovieViewModel
-import com.example.moviemues.model.Movie
+import com.example.moviemuse.viewmodel.MovieViewModel
+import com.example.moviemuse.model.Movie
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
