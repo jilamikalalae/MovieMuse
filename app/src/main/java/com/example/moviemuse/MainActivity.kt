@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +22,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.moviemuse.ui.theme.MovieMuseTheme
+import com.example.moviemuse.screens.LoginScreen
+import com.example.moviemuse.screens.RegisterScreen
+import com.example.moviemuse.screens.ProfileScreen
 import com.example.moviemuse.screens.ReviewScreen
 
 class MainActivity : ComponentActivity() {
@@ -38,16 +42,30 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(navController: NavHostController) {
     Scaffold(
-        bottomBar = { BottomNavBar(navController) }
+        bottomBar = {
+            // Only show bottom bar on main screens
+            val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+            if (currentRoute in listOf("home", "favorites", "search", "profile")) {
+                BottomNavBar(navController)
+            }
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "home",
+            startDestination = "login", // Changed to start with login
             modifier = Modifier.padding(innerPadding)
         ) {
+            // Auth routes
+            composable("login") { LoginScreen(navController) }
+            composable("register") { RegisterScreen(navController) }
+
+            // Main routes
             composable("home") { MovieListScreen(navController) }
             composable("favorites") { FavoritesScreen() }
             composable("search") { SearchScreen() }
+            composable("profile") { ProfileScreen(navController) }
+
+            // Detail routes
             composable(
                 "movieDetail/{movieId}",
                 arguments = listOf(navArgument("movieId") { type = NavType.IntType })
@@ -66,7 +84,6 @@ fun MainScreen(navController: NavHostController) {
     }
 }
 
-
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -77,19 +94,45 @@ fun BottomNavBar(navController: NavHostController) {
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") },
             selected = currentRoute == "home",
-            onClick = { navController.navigate("home") { launchSingleTop = true } }
+            onClick = {
+                navController.navigate("home") {
+                    launchSingleTop = true
+                    popUpTo("home") { saveState = true }
+                }
+            }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
             label = { Text("Favorites") },
             selected = currentRoute == "favorites",
-            onClick = { navController.navigate("favorites") { launchSingleTop = true } }
+            onClick = {
+                navController.navigate("favorites") {
+                    launchSingleTop = true
+                    popUpTo("home") { saveState = true }
+                }
+            }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             label = { Text("Search") },
             selected = currentRoute == "search",
-            onClick = { navController.navigate("search") { launchSingleTop = true } }
+            onClick = {
+                navController.navigate("search") {
+                    launchSingleTop = true
+                    popUpTo("home") { saveState = true }
+                }
+            }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+            label = { Text("Profile") },
+            selected = currentRoute == "profile",
+            onClick = {
+                navController.navigate("profile") {
+                    launchSingleTop = true
+                    popUpTo("home") { saveState = true }
+                }
+            }
         )
     }
 }
