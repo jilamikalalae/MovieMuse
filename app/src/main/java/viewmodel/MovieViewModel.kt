@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.moviemuse.model.Movie
+import com.example.moviemuse.model.Review
 
 class MovieViewModel : ViewModel() {
     private val repository = MovieRepository()
@@ -36,4 +37,33 @@ class MovieViewModel : ViewModel() {
             }
         }
     }
+
+    fun getMovieById(movieId: Int): StateFlow<Movie?> {
+        val movieState = MutableStateFlow<Movie?>(null)
+
+        viewModelScope.launch {
+            try {
+                val movie = _movies.value.find { it.id == movieId }
+                movieState.value = movie
+            } catch (e: Exception) {
+                Log.e("MovieViewModel", "Error fetching movie details", e)
+            }
+        }
+        return movieState
+    }
+
+    fun getReviews(movieId: Int): StateFlow<List<Review>> {
+        val reviewsState = MutableStateFlow<List<Review>>(emptyList())
+
+        viewModelScope.launch {
+            try {
+                val response = repository.fetchMovieReviews(movieId)
+                reviewsState.value = response
+            } catch (e: Exception) {
+                Log.e("MovieViewModel", "Error fetching reviews", e)
+            }
+        }
+        return reviewsState
+    }
+
 }
