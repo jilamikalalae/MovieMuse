@@ -41,10 +41,35 @@ fun MovieDetailScreen(movieId: Int, navController: NavHostController, viewModel:
             Text(text = it.overview, style = MaterialTheme.typography.bodyLarge, color = Color.White)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Reviews", style = MaterialTheme.typography.headlineSmall, color = Color.White)
 
-            reviews.forEach { review ->
-                Text(text = "• ${review.author}: ${review.content}", color = Color.Gray, modifier = Modifier.padding(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Reviews",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White
+                )
+
+                Button(
+                    onClick = { navController.navigate("movieReviews/${movie!!.id}") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("See All Reviews")
+                }
+            }
+
+            reviews.take(2).forEach { review ->
+                Text(
+                    text = "• ${review.author}: ${review.content}",
+                    color = Color.Gray,
+                    modifier = Modifier.padding(4.dp)
+                )
             }
         }
     }

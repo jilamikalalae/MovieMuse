@@ -21,18 +21,51 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.moviemuse.ui.theme.MovieMuseTheme
+import com.example.moviemuse.screens.ReviewScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MovieMuseTheme {
-                val navController = rememberNavController()  // This returns NavHostController
+                val navController = rememberNavController()
                 MainScreen(navController)
             }
         }
     }
 }
+
+@Composable
+fun MainScreen(navController: NavHostController) {
+    Scaffold(
+        bottomBar = { BottomNavBar(navController) }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("home") { MovieListScreen(navController) }
+            composable("favorites") { FavoritesScreen() }
+            composable("search") { SearchScreen() }
+            composable(
+                "movieDetail/{movieId}",
+                arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                MovieDetailScreen(movieId, navController)
+            }
+            composable(
+                "movieReviews/{movieId}",
+                arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                ReviewScreen(movieId = movieId, navController = navController)
+            }
+        }
+    }
+}
+
 
 @Composable
 fun BottomNavBar(navController: NavHostController) {
@@ -58,30 +91,6 @@ fun BottomNavBar(navController: NavHostController) {
             selected = currentRoute == "search",
             onClick = { navController.navigate("search") { launchSingleTop = true } }
         )
-    }
-}
-
-@Composable
-fun MainScreen(navController: NavHostController) {
-    Scaffold(
-        bottomBar = { BottomNavBar(navController) }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "home",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("home") { MovieListScreen(navController) }
-            composable("favorites") { FavoritesScreen() }
-            composable("search") { SearchScreen() }
-            composable(
-                "movieDetail/{movieId}",
-                arguments = listOf(navArgument("movieId") { type = NavType.IntType })
-            ) { backStackEntry ->
-                val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-                MovieDetailScreen(movieId, navController)
-            }
-        }
     }
 }
 

@@ -64,6 +64,25 @@ class MovieViewModel : ViewModel() {
             }
         }
         return reviewsState
+
     }
+
+    // In your existing MovieViewModel.kt, add this function
+    fun addReview(content: String, rating: Int, movieId: Int) {
+        viewModelScope.launch {
+            try {
+                // You can implement the API call here
+                // For now, we'll just update the UI
+                val newReview = Review(
+                    author = "User", // Replace with actual user name
+                    content = content
+                )
+                // Update your reviews state
+            } catch (e: Exception) {
+                Log.e("MovieViewModel", "Error adding review", e)
+            }
+        }
+    }
+
 
 }
