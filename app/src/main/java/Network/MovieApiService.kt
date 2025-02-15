@@ -3,6 +3,8 @@ package com.example.moviemuse.Network
 import retrofit2.http.GET
 import retrofit2.http.Query
 import com.example.moviemuse.model.MovieResponse
+import com.example.moviemuse.model.ReviewResponse
+import retrofit2.http.Path
 
 interface MovieApiService {
     @GET("movie/popular")
@@ -10,4 +12,10 @@ interface MovieApiService {
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): MovieResponse
+
+    @GET("movie/{movie_id}/reviews")
+    suspend fun getMovieReviews(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): ReviewResponse
 }

@@ -14,10 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.moviemuse.ui.theme.MovieMuseTheme
 
 class MainActivity : ComponentActivity() {
@@ -69,9 +71,16 @@ fun MainScreen(navController: NavHostController) {
             startDestination = "home",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("home") { MovieListScreen() }
+            composable("home") { MovieListScreen(navController) }
             composable("favorites") { FavoritesScreen() }
             composable("search") { SearchScreen() }
+            composable(
+                "movieDetail/{movieId}",
+                arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                MovieDetailScreen(movieId, navController)
+            }
         }
     }
 }

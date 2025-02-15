@@ -6,6 +6,7 @@ import com.example.moviemuse.Network.MovieApiService
 import com.example.moviemuse.Network.RetrofitClient
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.MovieResponse
+import com.example.moviemuse.model.Review
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -32,5 +33,18 @@ class MovieRepository {
             response.results
         }
     }
+
+    suspend fun fetchMovieReviews(movieId: Int): List<Review> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = movieApiService.getMovieReviews(movieId, BuildConfig.TMDB_API_KEY)
+                response.results  // Extract the list of reviews from `results`
+            } catch (e: Exception) {
+                Log.e("MovieRepository", "Error fetching reviews", e)
+                emptyList()
+            }
+        }
+    }
+
 
 }

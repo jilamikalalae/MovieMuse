@@ -15,9 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import androidx.compose.foundation.clickable
+import androidx.navigation.NavHostController
 
 @Composable
-fun MovieListScreen(viewModel: MovieViewModel = viewModel()) {
+fun MovieListScreen(navController: NavHostController, viewModel: MovieViewModel = viewModel()) {
     val movies by viewModel.movies.collectAsState(initial = emptyList())
 
     // Filter movies for each category (you can adjust this logic)
@@ -31,13 +33,13 @@ fun MovieListScreen(viewModel: MovieViewModel = viewModel()) {
             .padding(8.dp)
             .background(Color.Black)
     ) {
-        MovieCategorySection(title = "Trending Now", movies = trendingMovies)
-        MovieCategorySection(title = "New Release", movies = newReleaseMovies)
-        MovieCategorySection(title = "Anime", movies = animeMovies)
+        MovieCategorySection("Trending Now", trendingMovies, navController)
+        MovieCategorySection("New Release", newReleaseMovies, navController)
+        MovieCategorySection("Anime", animeMovies, navController)
     }
 }
 @Composable
-fun MovieCategorySection(title: String, movies: List<Movie>) {
+fun MovieCategorySection(title: String, movies: List<Movie>, navController: NavHostController) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(
             text = title,
@@ -51,18 +53,19 @@ fun MovieCategorySection(title: String, movies: List<Movie>) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(movies) { movie ->
-                MoviePosterCard(movie)
+                MoviePosterCard(movie, navController)
             }
         }
     }
 }
 
 @Composable
-fun MoviePosterCard(movie: Movie) {
+fun MoviePosterCard(movie: Movie, navController: NavHostController) {
     Card(
         modifier = Modifier
             .width(120.dp)   // Adjust width to fit more posters horizontally
-            .height(180.dp), // Adjust height for poster ratio
+            .height(180.dp) // Adjust height for poster ratio
+            .clickable { navController.navigate("movieDetail/${movie.id}") },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
