@@ -10,13 +10,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.Review
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import model.Trailer
 
 class MovieViewModel : ViewModel() {
     private val repository = MovieRepository()
 
-    // StateFlow to hold movies data
     private val _movies = MutableStateFlow<List<Movie>>(emptyList())
     val movies: StateFlow<List<Movie>> = _movies
+
+    private val _reviews = MutableStateFlow<List<Review>>(emptyList())
+    val reviews: StateFlow<List<Review>> = _reviews
+
+    private val _trailers = MutableStateFlow<List<Trailer>>(emptyList())
+    val trailers: StateFlow<List<Trailer>> = _trailers
 
     init {
         fetchMovies()
@@ -52,131 +61,77 @@ class MovieViewModel : ViewModel() {
         return movieState
     }
 
-    fun getReviews(movieId: Int): StateFlow<List<Review>> {
-        val reviewsState = MutableStateFlow<List<Review>>(emptyList())
 
+    fun getReviews(movieId: Int) {
         viewModelScope.launch {
-            try {
-                val response = repository.fetchMovieReviews(movieId)
-                reviewsState.value = response
+            // Fetch reviews from Firestore
+            val firebaseReviews = try {
+                val db = FirebaseFirestore.getInstance()
+                val snapshot = db.collection("movies")
+                    .document(movieId.toString())
+                    .collection("reviews")
+                    .get()
+                    .await()
+                snapshot.documents.mapNotNull { it.toObject(Review::class.java) }
             } catch (e: Exception) {
-                Log.e("MovieViewModel", "Error fetching reviews", e)
+                Log.e("MovieViewModel", "Error fetching Firebase reviews", e)
+                emptyList()
             }
-        }
-        return reviewsState
 
+
+            // Fetch reviews from TMDB
+            val tmdbReviews = try {
+                repository.fetchMovieReviews(movieId) ?: emptyList()
+            } catch (e: Exception) {
+                Log.e("MovieViewModel", "Error fetching TMDB reviews", e)
+                emptyList()
+            }
+
+
+            Log.d("Movies Reviews", tmdbReviews.toString())
+
+            // Combine both lists
+            _reviews.value = firebaseReviews + tmdbReviews
+        }
     }
 
-    fun addReview(content: String, rating: Int, movieId: Int) {
+    fun getTrailers(movieId: Int) {
         viewModelScope.launch {
             try {
-                // You can implement the API call here
-                // For now, we'll just update the UI
-                val newReview = Review(
-                    author = "User", // Replace with actual user name
-                    content = content
+                val response = repository.fetchMovieTrailer(movieId)
+                _trailers.value = response
+                Log.d("MovieTrailers", response.toString())
+            } catch (e: Exception) {
+                Log.e("MovieTrailers", "Error fetching trailers", e)
+            }
+        }
+    }
+
+    fun addReview(content: String, rating: Int, movieId: Int, userName: String) {
+        viewModelScope.launch {
+            try {
+                val db = FirebaseFirestore.getInstance()
+                val reviewData = hashMapOf(
+                    "author" to userName,
+                    "content" to content,
+                    "rating" to rating,
+                    "timestamp" to FieldValue.serverTimestamp()
                 )
-                // Update your reviews state
+                db.collection("movies")
+                    .document(movieId.toString())
+                    .collection("reviews")
+                    .add(reviewData)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d("MovieViewModel", "Review added with ID: ${documentReference.id}")
+
+                        getReviews(movieId)
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("MovieViewModel", "Error adding review", e)
+                    }
             } catch (e: Exception) {
                 Log.e("MovieViewModel", "Error adding review", e)
             }
         }
     }
-
-
-
 }
-
-//class MovieViewModel : ViewModel() {
-//
-//    private val repository = MovieRepository()
-//
-//    private val _movies = MutableStateFlow<List<Movie>>(emptyList())
-//    val movies: StateFlow<List<Movie>> = _movies
-//
-//    init {
-//        fetchMovies()
-//    }
-//
-//    private fun fetchMovies() {
-//        viewModelScope.launch {
-//            try {
-//                val fetchedMovies = repository.fetchPopularMovies() ?: emptyList()
-//                Log.d("MovieViewModel", "Fetched Movies: $fetchedMovies")
-//                val updatedMovies = fetchedMovies.map { movie ->
-//                    // Prepend the full image URL
-//                    movie.copy(posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath)
-//                }
-//                _movies.value = updatedMovies
-//            } catch (e: Exception) {
-//                Log.e("MovieViewModel", "Error fetching movies $e", e)
-//            }
-//        }
-//    }
-//
-//    // 2) Get a single Movie from the current list (no Firestore needed here)
-//    fun getMovieById(movieId: Int): StateFlow<Movie?> {
-//        val movieState = MutableStateFlow<Movie?>(null)
-//        viewModelScope.launch {
-//            try {
-//                val movie = _movies.value.find { it.id == movieId }
-//                movieState.value = movie
-//            } catch (e: Exception) {
-//                Log.e("MovieViewModel", "Error fetching movie details", e)
-//            }
-//        }
-//        return movieState
-//    }
-//
-//    fun getReviews(movieId: Int): StateFlow<List<Review>> {
-//        val reviewsState = MutableStateFlow<List<Review>>(emptyList())
-//
-//        val db = FirebaseFirestore.getInstance()
-//        val reviewsCollectionRef = db
-//            .collection("movies")
-//            .document(movieId.toString())
-//            .collection("reviews")
-//
-//        reviewsCollectionRef.addSnapshotListener { snapshot, e ->
-//            if (e != null) {
-//                Log.e("MovieViewModel", "Error fetching reviews from Firestore", e)
-//                return@addSnapshotListener
-//            }
-//            if (snapshot != null) {
-//                val reviewList = snapshot.documents.mapNotNull { doc ->
-//                    doc.toObject(Review::class.java)
-//                }
-//                reviewsState.value = reviewList
-//            }
-//        }
-//
-//        return reviewsState
-//    }
-//
-//    fun addReview(content: String, rating: Int, movieId: Int) {
-//        viewModelScope.launch {
-//            try {
-//                val db = FirebaseFirestore.getInstance()
-//                val movieDocRef = db.collection("movies").document(movieId.toString())
-//
-//                val reviewData = hashMapOf(
-//                    "author" to "User", // replace with actual user name if you have it
-//                    "content" to content,
-//                    "rating" to rating,
-//                    "timestamp" to FieldValue.serverTimestamp()
-//                )
-//
-//                movieDocRef.collection("reviews")
-//                    .add(reviewData)
-//                    .addOnSuccessListener { docRef ->
-//                        Log.d("MovieViewModel", "Review added with ID: ${docRef.id}")
-//                    }
-//                    .addOnFailureListener { e ->
-//                        Log.e("MovieViewModel", "Error adding review to Firestore", e)
-//                    }
-//            } catch (e: Exception) {
-//                Log.e("MovieViewModel", "Error adding review", e)
-//            }
-//        }
-//    }
-//}

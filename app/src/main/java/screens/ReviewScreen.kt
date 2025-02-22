@@ -15,39 +15,56 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.moviemuse.R
+import com.example.moviemuse.components.MovieHeader
+import com.example.moviemuse.components.ReviewHeader
+import com.example.moviemuse.components.ReviewItem
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.viewmodel.MovieViewModel
 import com.example.moviemuse.model.Review
+import viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReviewScreen(
     movieId: Int,
     navController: NavHostController,
+    userViewModel: UserViewModel = viewModel(),
     viewModel: MovieViewModel = viewModel()
 ) {
+
+    val userData by userViewModel.userData.collectAsState()
     val movie by viewModel.getMovieById(movieId).collectAsState(initial = null)
-    val reviews by viewModel.getReviews(movieId).collectAsState(initial = emptyList())
+
+    // Fetch reviews once when the screen is launched
+    LaunchedEffect(movieId) {
+        viewModel.getReviews(movieId)
+    }
+
+    val reviews by viewModel.reviews.collectAsState()
     var showAddReviewDialog by remember { mutableStateOf(false) }
+
+    val colors = MaterialTheme.colorScheme // Get current theme colors
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Reviews") },
+                title = { Text(stringResource(id = R.string.reviews)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -55,7 +72,7 @@ fun ReviewScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(colors.background)
                 .padding(paddingValues)
         ) {
             LazyColumn(
@@ -83,7 +100,7 @@ fun ReviewScreen(
             AddReviewDialog(
                 onDismiss = { showAddReviewDialog = false },
                 onSubmit = { content, rating ->
-                    // Call viewModel function to add review
+                    viewModel.addReview(content, rating, movieId, userData?.username ?: "Anonymous User")
                     showAddReviewDialog = false
                 }
             )
@@ -91,130 +108,8 @@ fun ReviewScreen(
     }
 }
 
-@Composable
-fun MovieHeader(movie: Movie) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = movie.posterPath,
-            contentDescription = movie.title,
-            modifier = Modifier
-                .width(80.dp)
-                .height(120.dp)
-                .clip(MaterialTheme.shapes.medium),
-            contentScale = ContentScale.Crop
-        )
 
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column {
-            Text(
-                text = movie.title,
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            RatingBar(rating = (movie.rating / 2).toInt())
-        }
-    }
-}
-
-@Composable
-fun ReviewHeader(onAddReviewClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "Reviews",
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.White
-        )
-        Button(
-            onClick = onAddReviewClick,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
-            )
-        ) {
-            Text("Write a review")
-        }
-    }
-}
-
-@Composable
-fun ReviewItem(review: Review) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1E1E1E)
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                )
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column {
-                    Text(
-                        text = review.author,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                    Row {
-                        repeat(5) { index ->
-                            Icon(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = "Star",
-                                tint = Color.Yellow,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = review.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
-        }
-    }
-}
-
-@Composable
-fun RatingBar(rating: Int, maxStars: Int = 5) {
-    Row {
-        repeat(maxStars) { index ->
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Star",
-                tint = if (index < rating) Color.Yellow else Color.Gray,
-                modifier = Modifier.size(16.dp)
-            )
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddReviewDialog(
     onDismiss: () -> Unit,
@@ -225,10 +120,10 @@ fun AddReviewDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Write a Review") },
-        containerColor = Color(0xFF1E1E1E),
-        titleContentColor = Color.White,
-        textContentColor = Color.White,
+        title = { Text(text = stringResource(id = R.string.write_a_review)) },
+        containerColor = MaterialTheme.colorScheme.surface,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        textContentColor = MaterialTheme.colorScheme.onSurface,
         text = {
             Column {
                 Row(
@@ -241,8 +136,11 @@ fun AddReviewDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Star,
-                                contentDescription = "Star ${index + 1}",
-                                tint = if (index < rating) Color.Yellow else Color.Gray
+                                contentDescription = stringResource(id = R.string.star_desc, index + 1),
+                                tint = if (index < rating)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                             )
                         }
                     }
@@ -253,13 +151,13 @@ fun AddReviewDialog(
                 TextField(
                     value = reviewText,
                     onValueChange = { reviewText = it },
-                    placeholder = { Text("Share your thoughts...") },
+                    placeholder = { Text(text = stringResource(id = R.string.share_your_thoughts)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFF2E2E2E),
-                        focusedContainerColor = Color(0xFF2E2E2E)
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                     )
                 )
             }
@@ -271,12 +169,18 @@ fun AddReviewDialog(
                     onDismiss()
                 }
             ) {
-                Text("Post", color = Color.White)
+                Text(
+                    text = stringResource(id = R.string.post),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.White)
+                Text(
+                    text = stringResource(id = R.string.cancel),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     )

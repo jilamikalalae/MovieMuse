@@ -37,5 +37,16 @@
     <string name="cancel">Cancel</string>
     <string name="logout">Logout</string>
 
+    // Movie Details
+    <string name="movie_detail">Movie Detail</string>
+    <string name="reviews">Reviews</string>
+    <string name="see_all_reviews">See All Reviews</string>
+    <string name="play_youtube_video">Play Youtube Video</string>
+
+    // Reviews
+    <string name="write_a_review">Write a Review</string>
+    <string name="share_your_thoughts">Share your thoughts...</string>
+    <string name="post">Post</string>
+    <string name="star_desc">Star %1$d</string>
 
 </resources>

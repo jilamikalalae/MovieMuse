@@ -1,8 +1,9 @@
 package com.example.moviemuse.model
 
-import com.google.gson.annotations.SerializedName
-
 data class Review(
-    val author: String,
-    @SerializedName("content") val content: String
+
+    val author: String = "",
+    val content: String = "",
+    val rating: Int = 0,
+    val timestamp: com.google.firebase.Timestamp? = null
 )
