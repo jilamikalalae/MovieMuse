@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MovieMuse</string>
+
+    // Home
+    <string name="trending_now">Trending Now (thai)</string>
+    <string name="new_release">New Release (thai)</string>
+    <string name="anime">Anime (thai)</string>
+</resources>
