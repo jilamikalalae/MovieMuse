@@ -1,5 +1,8 @@
 package com.example.moviemuse
 
+import android.app.Activity
+import android.app.LocaleManager
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +33,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -49,28 +51,45 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import screens.MovieDetailScreen
 import screens.MovieListScreen
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import screens.FavoritesScreen
+import screens.SearchScreen
 
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context?) {
+
+        val context = newBase?.let { com.example.moviemuse.LocaleManager.setLocale(it) }
+        super.attachBaseContext(context)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val context = LocalContext.current
 
             var isDarkTheme by rememberSaveable { mutableStateOf(false) }
             var isThaiLanguage by rememberSaveable { mutableStateOf(false) }
 
-            MovieMuseTheme {
+            MovieMuseTheme(darkTheme = isDarkTheme) {
                 val navController = rememberNavController()
                 MainScreen(
                     navController = navController,
                     isDarkTheme = isDarkTheme,
                     onThemeToggle = { isDarkTheme = !isDarkTheme },
                     isThaiLanguage = isThaiLanguage,
-                    onLanguageToggle = { isThaiLanguage = !isThaiLanguage }
+                    onLanguageToggle = {
+                        val newLanguageCode = if (isThaiLanguage) "en" else "th"
+                        com.example.moviemuse.LocaleManager.saveLanguage(context, newLanguageCode)
+                        isThaiLanguage = !isThaiLanguage
+                        (context as? Activity)?.recreate()
+                    }
                 )
             }
         }
     }
 }
+
 
 @Composable
 fun MainScreen(
@@ -95,7 +114,7 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(halfScreenWidth)
-                    .background(Color.Gray)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
                 DrawerContent(
                     isDarkTheme = isDarkTheme,
@@ -126,8 +145,8 @@ fun MainScreen(
                 composable("login") { LoginScreen(navController) }
                 composable("register") { RegisterScreen(navController) }
                 composable("home") { MovieListScreen(navController) }
-                composable("favorites") { FavoritesScreen() }
-                composable("search") { SearchScreen() }
+                composable("favorites") { FavoritesScreen(navController) }
+                composable("search") { SearchScreen(navController) }
                 composable("profile") { ProfileScreen(navController) }
                 composable(
                     "movieDetail/{movieId}",
@@ -175,50 +194,67 @@ fun DrawerContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(text = "Settings", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = stringResource(id = R.string.settings),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Day/Night Mode Toggle
+        // Night Mode Toggle
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    onThemeToggle()
-                }
+                .clickable { onThemeToggle() }
                 .padding(vertical = 8.dp)
         ) {
-            Text(text = "Day/Night Mode", modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.night_mode),
+                modifier = Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Switch(
                 checked = isDarkTheme,
-                onCheckedChange = {
-                    onThemeToggle()
-                }
+                onCheckedChange = { onThemeToggle() },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Thai/English Toggle
+        // Thai Language Toggle
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    onLanguageToggle()
-                }
+                .clickable { onLanguageToggle() }
                 .padding(vertical = 8.dp)
         ) {
-            Text(text = "Thai/English", modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.language),
+                modifier = Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Switch(
                 checked = isThaiLanguage,
-                onCheckedChange = {
-                    onLanguageToggle()
-                }
+                onCheckedChange = { onLanguageToggle() },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             )
         }
     }
 }
+
 
 
 @Composable
@@ -228,8 +264,13 @@ fun BottomNavBar(navController: NavHostController) {
 
     NavigationBar {
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = stringResource(id = R.string.home)
+                )
+            },
+            label = { Text(stringResource(id = R.string.home)) },
             selected = currentRoute == "home",
             onClick = {
                 navController.navigate("home") {
@@ -239,8 +280,13 @@ fun BottomNavBar(navController: NavHostController) {
             }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-            label = { Text("Favorites") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = stringResource(id = R.string.favorites)
+                )
+            },
+            label = { Text(stringResource(id = R.string.favorites)) },
             selected = currentRoute == "favorites",
             onClick = {
                 navController.navigate("favorites") {
@@ -250,8 +296,13 @@ fun BottomNavBar(navController: NavHostController) {
             }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-            label = { Text("Search") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(id = R.string.search)
+                )
+            },
+            label = { Text(stringResource(id = R.string.search)) },
             selected = currentRoute == "search",
             onClick = {
                 navController.navigate("search") {
@@ -261,8 +312,13 @@ fun BottomNavBar(navController: NavHostController) {
             }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = stringResource(id = R.string.profile)
+                )
+            },
+            label = { Text(stringResource(id = R.string.profile)) },
             selected = currentRoute == "profile",
             onClick = {
                 navController.navigate("profile") {
@@ -272,22 +328,4 @@ fun BottomNavBar(navController: NavHostController) {
             }
         )
     }
-}
-
-@Composable
-fun FavoritesScreen() {
-    Text(
-        text = "Favorites",
-        style = MaterialTheme.typography.headlineMedium,
-        modifier = Modifier.padding(16.dp)
-    )
-}
-
-@Composable
-fun SearchScreen() {
-    Text(
-        text = "Search",
-        style = MaterialTheme.typography.headlineMedium,
-        modifier = Modifier.padding(16.dp)
-    )
 }

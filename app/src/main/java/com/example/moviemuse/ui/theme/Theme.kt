@@ -4,21 +4,33 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Color.Black,
-    secondary = Color.DarkGray,
-    background = Color.Black,
+private val LightColorScheme = lightColorScheme(
+    primary = Color(0xFF6200EE),
     onPrimary = Color.White,
-    onBackground = Color.White
+    background = Color(0xFFFFFFFF),
+    onBackground = Color(0xFF000000),
+    surface = Color(0xFFF0F0F0),
+    onSurface = Color(0xFF000000)
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = Color(0xFFBB86FC),
+    onPrimary = Color.Black,
+    background = Color(0xFF121212),
+    onBackground = Color(0xFFFFFFFF),
+    surface = Color(0xFF2A2A2A),
+    onSurface = Color(0xFFFFFFFF)
 )
 
 @Composable
 fun MovieMuseTheme(
-    darkTheme: Boolean = true,  // Force dark theme
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+
     MaterialTheme(
-        colorScheme = DarkColorScheme,
+        colorScheme = colorScheme,
         typography = Typography(),
         content = content
     )
