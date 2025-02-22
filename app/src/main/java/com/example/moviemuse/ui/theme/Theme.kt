@@ -10,7 +10,7 @@ private val LightColorScheme = lightColorScheme(
     background = Color(0xFFFFFFFF),
     onBackground = Color(0xFF000000),
     surface = Color(0xFFF0F0F0),
-    onSurface = Color(0xFF000000)
+    onSurface = Color(0xFF000000),
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -24,10 +24,10 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun MovieMuseTheme(
-    darkTheme: Boolean = true,
+    isLightTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val colorScheme = if (isLightTheme) LightColorScheme else DarkColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

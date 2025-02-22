@@ -68,15 +68,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
 
-            var isDarkTheme by rememberSaveable { mutableStateOf(false) }
+            var isLightTheme by rememberSaveable { mutableStateOf(false) }
             var isThaiLanguage by rememberSaveable { mutableStateOf(false) }
 
-            MovieMuseTheme(darkTheme = isDarkTheme) {
+            MovieMuseTheme(isLightTheme = isLightTheme) {
                 val navController = rememberNavController()
                 MainScreen(
                     navController = navController,
-                    isDarkTheme = isDarkTheme,
-                    onThemeToggle = { isDarkTheme = !isDarkTheme },
+                    isLightTheme = isLightTheme,
+                    onThemeToggle = { isLightTheme = !isLightTheme },
                     isThaiLanguage = isThaiLanguage,
                     onLanguageToggle = {
                         val newLanguageCode = if (isThaiLanguage) "en" else "th"
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    isDarkTheme: Boolean,
+    isLightTheme: Boolean,
     onThemeToggle: () -> Unit,
     isThaiLanguage: Boolean,
     onLanguageToggle: () -> Unit
@@ -117,7 +117,7 @@ fun MainScreen(
                     .background(MaterialTheme.colorScheme.surface)
             ) {
                 DrawerContent(
-                    isDarkTheme = isDarkTheme,
+                    isLightTheme = isLightTheme,
                     onThemeToggle = onThemeToggle,
                     isThaiLanguage = isThaiLanguage,
                     onLanguageToggle = onLanguageToggle,
@@ -184,7 +184,7 @@ fun MyTopAppBar(scope:  CoroutineScope, drawerState: DrawerState) {
 
 @Composable
 fun DrawerContent(
-    isDarkTheme: Boolean,
+    isLightTheme: Boolean,
     onThemeToggle: () -> Unit,
     isThaiLanguage: Boolean,
     onLanguageToggle: () -> Unit,
@@ -210,12 +210,12 @@ fun DrawerContent(
                 .padding(vertical = 8.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.night_mode),
+                text = stringResource(id = R.string.light_mode),
                 modifier = Modifier.weight(1f),
                 color = MaterialTheme.colorScheme.onBackground
             )
             Switch(
-                checked = isDarkTheme,
+                checked = isLightTheme,
                 onCheckedChange = { onThemeToggle() },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,

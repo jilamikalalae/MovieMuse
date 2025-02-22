@@ -4,7 +4,7 @@
 
     // Drawer
     <string name="settings">Settings TH</string>
-    <string name="night_mode">Night Mode TH</string>
+    <string name="light_mode">Light Mode TH</string>
     <string name="language">Thai Language TH</string>
 
     // Bottom Nav
@@ -24,6 +24,17 @@
     <string name="no_favorite_movies">No favorite movies</string>
 
     // Search
-    <string name="no_movies_found">No movies found</string>
+    <string name="no_movies_found">No movies found</string>\
+
+    // Profile
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_profile_picture">Edit Profile Picture</string>
+
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
 
 </resources>

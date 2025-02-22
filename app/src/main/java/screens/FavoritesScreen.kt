@@ -24,14 +24,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviemuse.R
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import viewmodel.UserViewModel
 
 @Composable
 fun FavoritesScreen(
     navController: NavHostController,
-    viewModel: MovieViewModel = viewModel()
+    movieViewModel: MovieViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel()
 ) {
-    val movies by viewModel.movies.collectAsState(initial = emptyList())
-    val userFavorites by viewModel.userFavorites.collectAsState(initial = emptyList())
+    val movies by movieViewModel.movies.collectAsState(initial = emptyList())
+    val userFavorites by userViewModel.userFavorites.collectAsState(initial = emptyList())
 
     // Filter movies that are favorites
     val favoriteMovies = movies.filter { movie ->
@@ -70,7 +72,7 @@ fun FavoritesScreen(
                         movie = movie,
                         navController = navController,
                         isFavorite = true,
-                        onFavoriteToggle = { viewModel.toggleFavorite(movie) }
+                        onFavoriteToggle = { userViewModel.toggleFavorite(movie) }
                     )
                 }
             }

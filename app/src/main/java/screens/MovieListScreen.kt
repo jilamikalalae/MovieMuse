@@ -26,11 +26,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.navigation.NavHostController
 import com.example.moviemuse.R
+import viewmodel.UserViewModel
 
 @Composable
-fun MovieListScreen(navController: NavHostController, viewModel: MovieViewModel = viewModel()) {
-    val movies by viewModel.movies.collectAsState(initial = emptyList())
-    val userFavorites by viewModel.userFavorites.collectAsState()
+fun MovieListScreen(navController: NavHostController, movieViewModel: MovieViewModel = viewModel(),
+                    userViewModel: UserViewModel = viewModel()) {
+    val movies by movieViewModel.movies.collectAsState(initial = emptyList())
+    val userFavorites by userViewModel.userFavorites.collectAsState()
 
     val trendingMovies = movies.take(10)
     val newReleaseMovies = movies.takeLast(10)
@@ -39,28 +41,28 @@ fun MovieListScreen(navController: NavHostController, viewModel: MovieViewModel 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background) // Themed background
+            .background(MaterialTheme.colorScheme.background)
             .padding(8.dp)
     ) {
         MovieCategorySection(
             title = stringResource(id = R.string.trending_now),
             movies = trendingMovies,
             navController = navController,
-            viewModel = viewModel,
+            viewModel = userViewModel,
             userFavorites = userFavorites
         )
         MovieCategorySection(
             title = stringResource(id = R.string.new_release),
             movies = newReleaseMovies,
             navController = navController,
-            viewModel = viewModel,
+            viewModel = userViewModel,
             userFavorites = userFavorites
         )
         MovieCategorySection(
             title = stringResource(id = R.string.anime),
             movies = animeMovies,
             navController = navController,
-            viewModel = viewModel,
+            viewModel = userViewModel,
             userFavorites = userFavorites
         )
     }
@@ -71,7 +73,7 @@ fun MovieCategorySection(
     title: String,
     movies: List<Movie>,
     navController: NavHostController,
-    viewModel: MovieViewModel,
+    viewModel: UserViewModel,
     userFavorites: List<Int>
 ) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
