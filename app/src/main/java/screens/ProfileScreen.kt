@@ -37,7 +37,7 @@ fun ProfileScreen(navController: NavHostController) {
                         val name = document.getString("name") ?: ""
                         val username = document.getString("username") ?: ""
                         val email = document.getString("email") ?: ""
-                        userData = UserData(name, username, email)
+                        userData = UserData(name, email, username)
                     }
                 }
         }
