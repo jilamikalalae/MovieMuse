@@ -42,6 +42,7 @@
     <string name="reviews">Reviews</string>
     <string name="see_all_reviews">See All Reviews</string>
     <string name="play_youtube_video">Play Youtube Video</string>
+    <string name="trailer">Trailer</string>
 
     // Reviews
     <string name="write_a_review">Write a Review</string>

@@ -42,6 +42,7 @@
     <string name="reviews">รีวิว</string>
     <string name="see_all_reviews">ดูรีวิวทั้งหมด</string>
     <string name="play_youtube_video">เล่นวิดีโอบน YouTube</string>
+    <string name="trailer">ตัวอย่างหนัง</string>
 
     <!-- Reviews -->
     <string name="write_a_review">เขียนรีวิว</string>

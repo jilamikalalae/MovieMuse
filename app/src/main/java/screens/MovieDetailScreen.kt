@@ -1,6 +1,7 @@
 package screens
 
 import Components.YouTubeWebView
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,8 +25,10 @@ import com.example.moviemuse.viewmodel.MovieViewModel
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.moviemuse.R
+import com.example.moviemuse.VideoPlayerActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +37,8 @@ fun MovieDetailScreen(
     navController: NavHostController,
     viewModel: MovieViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+
     val movie by viewModel.getMovieById(movieId).collectAsState(initial = null)
 
     LaunchedEffect(movieId) {
@@ -77,38 +82,56 @@ fun MovieDetailScreen(
                         .padding(16.dp)
                 ) {
                     // Movie poster image
-                    Image(
-                        painter = rememberImagePainter(currentMovie.posterPath),
-                        contentDescription = currentMovie.title,
-                        contentScale = ContentScale.Crop,
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp)
                             .padding(8.dp)
-                    )
+                    ) {
+                        // Display Movie Poster
+                        Image(
+                            painter = rememberImagePainter(currentMovie.posterPath),
+                            contentDescription = currentMovie.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
 
-                    // Movie details
+                        // Show button only if youtubeVideoId is available
+                        if (!youtubeVideoId.isNullOrEmpty()) {
+                            Button(
+                                onClick = {
+                                    val intent = Intent(context, VideoPlayerActivity::class.java)
+                                    intent.putExtra("VIDEO_KEY", youtubeVideoId)
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd) // Position to Bottom Right
+                                    .padding(8.dp)
+                            ) {
+                                Text(stringResource(id = R.string.trailer))
+                            }
+                        }
+                    }
+
                     Text(
                         text = currentMovie.title,
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
+                    // Movie details
                     Text(
                         text = "⭐ ${currentMovie.rating}/10",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.Yellow
                     )
+
+
+
                     Text(
                         text = currentMovie.overview,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-
-                    // Trailer section
-//                    if (!youtubeVideoId.isNullOrEmpty()) {
-//                        Spacer(modifier = Modifier.height(16.dp))
-//                        YouTubeWebView(videoId = youtubeVideoId)
-//                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
