@@ -1,11 +1,28 @@
 <resources>
     <string name="app_name">MovieMuse</string>
 
+    // Drawer
+    <string name="settings">Settings</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="language">Thai Language</string>
+
+    // Bottom Nav
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+
     // Home
     <string name="trending_now">Trending Now</string>
     <string name="new_release">New Release</string>
     <string name="anime">Anime</string>
+    <string name="favorite">favorite</string>
+    <string name="unfavorite">unfavorite</string>
 
+    // Favorite
+    <string name="no_favorite_movies">No favorite movies</string>
 
+    // Search
+    <string name="no_movies_found">No movies found</string>
 
 </resources>
