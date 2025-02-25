@@ -1,5 +1,6 @@
 package com.example.moviemuse.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,19 +9,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavHostController) {
+
+    val context = LocalContext.current
+
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf(false) }
+    val correctPass = password.isNotBlank() && confirmPassword.isNotBlank() && password == confirmPassword
+    val isFormComplete = name.isNotBlank() && username.isNotBlank() &&
+            email.isNotBlank() && correctPass
 
     Column(
         modifier = Modifier
@@ -115,16 +129,25 @@ fun RegisterScreen(navController: NavHostController) {
 
         OutlinedTextField(
             value = confirmPassword,
-            onValueChange = { confirmPassword = it },
+            onValueChange = {
+                confirmPassword = it
+                passwordError = password.isNotBlank() && confirmPassword.isNotBlank() && password != confirmPassword
+            },
             label = { Text("Confirm Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            isError = passwordError, // Show error when passwords do not match
+            supportingText = {
+                if (passwordError) {
+                    Text("Passwords do not match", color = Color.Red)
+                }
+            },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
-                focusedBorderColor = Color.Red,
+                focusedBorderColor = if (passwordError) Color.Red else Color.White,
                 unfocusedBorderColor = Color.White,
-                focusedLabelColor = Color.Red,
+                focusedLabelColor = if (passwordError) Color.Red else Color.White,
                 unfocusedLabelColor = Color.White,
                 cursorColor = Color.Red
             ),
@@ -135,12 +158,40 @@ fun RegisterScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                navController.navigate("login") {
-                    popUpTo("register") { inclusive = true }
-                }
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val user = auth.currentUser
+                            val userId = user?.uid
+
+                            val userData = hashMapOf(
+                                "name" to name,
+                                "username" to username,
+                                "email" to email
+                            )
+
+                            // Save user data in Firestore under "users/{uid}"
+                            userId?.let {
+                                db.collection("users").document(it)
+                                    .set(userData)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
+                                        navController.navigate("login") {
+                                            popUpTo("register") { inclusive = true }
+                                        }
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                        } else {
+                            Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = isFormComplete
         ) {
             Text("Register")
         }

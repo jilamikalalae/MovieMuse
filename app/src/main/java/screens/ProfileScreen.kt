@@ -15,12 +15,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.moviemuse.model.UserData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavHostController) {
     var showEditDialog by remember { mutableStateOf(false) }
-    var userData by remember { mutableStateOf(UserData("John Doe", "john@example.com", "johndoe")) }
+
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+    val userId = auth.currentUser?.uid
+    var userData by remember { mutableStateOf(UserData("", "", "")) }
+
+    LaunchedEffect(userId) {
+        if (userId != null) {
+            db.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val name = document.getString("name") ?: ""
+                        val username = document.getString("username") ?: ""
+                        val email = document.getString("email") ?: ""
+                        userData = UserData(name, email, username)
+                    }
+                }
+        }
+    }
 
     Scaffold(
         topBar = {

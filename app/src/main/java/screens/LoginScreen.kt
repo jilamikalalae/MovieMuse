@@ -1,5 +1,6 @@
 package com.example.moviemuse.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -7,15 +8,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
+
+    var email by remember { mutableStateOf("jeffrey@gmail.com") }
+    var password by remember { mutableStateOf("jeffrey1234") }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -70,10 +79,33 @@ fun LoginScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
+
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
+                if (email.isNotBlank() && password.isNotBlank()) {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                errorMessage = "" // Clear error message
+                                navController.navigate("home") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            } else {
+                                errorMessage = "Incorrect email or password"
+                            }
+                        }
+                } else {
+                    errorMessage = "Please fill in all fields"
                 }
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
