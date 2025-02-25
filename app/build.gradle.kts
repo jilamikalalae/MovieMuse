@@ -109,6 +109,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.firestore.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
