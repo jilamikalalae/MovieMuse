@@ -63,27 +63,27 @@ fun ProfileScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Profile Picture
-            Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .padding(8.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                )
-                IconButton(
-                    onClick = { /* Add image picker functionality */ },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .background(Color.White, CircleShape)
-                        .size(32.dp)
-                ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit Profile Picture")
-                }
-            }
+//            Box(
+//                modifier = Modifier
+//                    .size(120.dp)
+//                    .padding(8.dp)
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .clip(CircleShape)
+//                        .background(Color.Gray)
+//                )
+//                IconButton(
+//                    onClick = { /* Add image picker functionality */ },
+//                    modifier = Modifier
+//                        .align(Alignment.BottomEnd)
+//                        .background(Color.White, CircleShape)
+//                        .size(32.dp)
+//                ) {
+//                    Icon(Icons.Default.Edit, contentDescription = "Edit Profile Picture")
+//                }
+//            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
