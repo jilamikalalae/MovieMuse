@@ -29,6 +29,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.moviemuse.R
 import com.example.moviemuse.VideoPlayerActivity
+import android.content.pm.PackageManager
+import android.widget.Toast
+import android.net.Uri
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +41,7 @@ fun MovieDetailScreen(
     navController: NavHostController,
     viewModel: MovieViewModel = viewModel()
 ) {
-    val context = LocalContext.current
+    val context = LocalContext.current // ✅ Correct placement inside @Composable function
 
     val movie by viewModel.getMovieById(movieId).collectAsState(initial = null)
 
@@ -79,16 +83,16 @@ fun MovieDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Movie poster image
+                    // Movie Poster
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp)
                             .padding(8.dp)
                     ) {
-                        // Display Movie Poster
                         Image(
                             painter = rememberImagePainter(currentMovie.posterPath),
                             contentDescription = currentMovie.title,
@@ -96,7 +100,6 @@ fun MovieDetailScreen(
                             modifier = Modifier.fillMaxSize()
                         )
 
-                        // Show button only if youtubeVideoId is available
                         if (!youtubeVideoId.isNullOrEmpty()) {
                             Button(
                                 onClick = {
@@ -105,7 +108,7 @@ fun MovieDetailScreen(
                                     context.startActivity(intent)
                                 },
                                 modifier = Modifier
-                                    .align(Alignment.BottomEnd) // Position to Bottom Right
+                                    .align(Alignment.BottomEnd)
                                     .padding(8.dp)
                             ) {
                                 Text(stringResource(id = R.string.trailer))
@@ -118,14 +121,6 @@ fun MovieDetailScreen(
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-                    // Movie details
-                    Text(
-                        text = "⭐ ${currentMovie.rating}/10",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Yellow
-                    )
-
-
 
                     Text(
                         text = currentMovie.overview,
@@ -135,7 +130,7 @@ fun MovieDetailScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Reviews section
+                    // Reviews Section
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -159,15 +154,41 @@ fun MovieDetailScreen(
 
                     reviews.take(3).forEach { review ->
                         Spacer(modifier = Modifier.height(16.dp))
-                        ReviewItem(
-                            review
-                        )
+                        ReviewItem(review)
                     }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // Open Major Cineplex App Button
+                    Button(
+                        onClick = {
+                            val packageName = "com.hlpth.majorcineplex"
+                            val intent = Intent()
+                            intent.setClassName(packageName, "com.hlpth.majorcineplex.ui.main.MainActivity")
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Could not open Major Cineplex app", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Open Major Cineplex App")
+                    }
+
+
+
+
+
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
     }
 }
-
-
