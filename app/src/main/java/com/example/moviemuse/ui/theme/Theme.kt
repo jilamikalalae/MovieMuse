@@ -19,7 +19,7 @@ private val DarkColorScheme = darkColorScheme(
     background = Color(0xFF121212),
     onBackground = Color(0xFFFFFFFF),
     surface = Color(0xFF2A2A2A),
-    onSurface = Color(0xFFFFFFFF)
+    onSurface = Color(0xFFFFFFFF),
 )
 
 @Composable

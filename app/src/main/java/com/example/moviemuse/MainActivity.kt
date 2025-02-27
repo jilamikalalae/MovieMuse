@@ -72,11 +72,15 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val savedLanguage = com.example.moviemuse.LocaleManager.getSavedLanguage(this)
+        val isDefaultThai = savedLanguage == "th"
+
         setContent {
             val context = LocalContext.current
 
             var isLightTheme by rememberSaveable { mutableStateOf(false) }
-            var isThaiLanguage by rememberSaveable { mutableStateOf(false) }
+            var isThaiLanguage by rememberSaveable { mutableStateOf(isDefaultThai) }
 
             MovieMuseTheme(isLightTheme = isLightTheme) {
                 val navController = rememberNavController()

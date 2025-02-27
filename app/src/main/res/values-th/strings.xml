@@ -2,39 +2,51 @@
 <resources>
     <string name="app_name">MovieMuse</string>
 
-    // Drawer
-    <string name="settings">Settings TH</string>
-    <string name="light_mode">Light Mode TH</string>
-    <string name="language">Thai Language TH</string>
+    <!-- Drawer -->
+    <string name="settings">การตั้งค่า</string>
+    <string name="light_mode">โหมดสว่าง</string>
+    <string name="language">ภาษาไทย</string>
 
-    // Bottom Nav
-    <string name="home">Home TH</string>
-    <string name="favorites">Favorites TH</string>
-    <string name="search">Search TH</string>
-    <string name="profile">Profile TH</string>
+    <!-- Bottom Nav -->
+    <string name="home">หน้าหลัก</string>
+    <string name="favorites">รายการโปรด</string>
+    <string name="search">ค้นหา</string>
+    <string name="profile">โปรไฟล์</string>
 
-    // Home
-    <string name="trending_now">Trending Now (thai)</string>
-    <string name="new_release">New Release (thai)</string>
-    <string name="anime">Anime (thai)</string>
-    <string name="favorite">favorite</string>
-    <string name="unfavorite">unfavorite</string>
+    <!-- Home -->
+    <string name="trending_now">กำลังมาแรง</string>
+    <string name="new_release">ใหม่ล่าสุด</string>
+    <string name="anime">อนิเมะ</string>
+    <string name="favorite">รายการโปรด</string>
+    <string name="unfavorite">ยกเลิกรายการโปรด</string>
 
-    // Favorite
-    <string name="no_favorite_movies">No favorite movies</string>
+    <!-- Favorite -->
+    <string name="no_favorite_movies">ไม่มีภาพยนตร์ที่บันทึกเป็นรายการโปรด</string>
 
-    // Search
-    <string name="no_movies_found">No movies found</string>\
+    <!-- Search -->
+    <string name="no_movies_found">ไม่พบภาพยนตร์</string>
 
-    // Profile
-    <string name="name">Name</string>
-    <string name="username">Username</string>
-    <string name="email">Email</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="edit_profile_picture">Edit Profile Picture</string>
+    <!-- Profile -->
+    <string name="name">ชื่อ</string>
+    <string name="username">ชื่อผู้ใช้</string>
+    <string name="email">อีเมล</string>
+    <string name="edit_profile">แก้ไขโปรไฟล์</string>
+    <string name="edit_profile_picture">แก้ไขรูปโปรไฟล์</string>
 
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="logout">Logout</string>
+    <string name="save">บันทึก</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="logout">ออกจากระบบ</string>
 
+    <!-- Movie Details -->
+    <string name="movie_detail">รายละเอียดภาพยนตร์</string>
+    <string name="reviews">รีวิว</string>
+    <string name="see_all_reviews">ดูรีวิวทั้งหมด</string>
+    <string name="play_youtube_video">เล่นวิดีโอบน YouTube</string>
+    <string name="trailer">ตัวอย่างหนัง</string>
+
+    <!-- Reviews -->
+    <string name="write_a_review">เขียนรีวิว</string>
+    <string name="share_your_thoughts">แบ่งปันความคิดเห็นของคุณ...</string>
+    <string name="post">โพสต์</string>
+    <string name="star_desc">ดาว %1$d</string>
 </resources>
