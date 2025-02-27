@@ -34,14 +34,16 @@ import androidx.navigation.NavHostController
 import com.example.moviemuse.viewmodel.MovieViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviemuse.R
+import viewmodel.UserViewModel
 
 @Composable
 fun SearchScreen(
     navController: NavHostController,
-    viewModel: MovieViewModel = viewModel()
+    movieViewModel: MovieViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel()
 ) {
-    val movies by viewModel.movies.collectAsState(initial = emptyList())
-    val userFavorites by viewModel.userFavorites.collectAsState()
+    val movies by movieViewModel.movies.collectAsState(initial = emptyList())
+    val userFavorites by userViewModel.userFavorites.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
 
@@ -99,7 +101,7 @@ fun SearchScreen(
                         movie = movie,
                         navController = navController,
                         isFavorite = userFavorites.contains(movie.id),
-                        onFavoriteToggle = {viewModel.toggleFavorite(movie)}
+                        onFavoriteToggle = {userViewModel.toggleFavorite(movie)}
                     )
                 }
             }

@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.Review
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 
 class MovieViewModel : ViewModel() {
     private val repository = MovieRepository()
@@ -21,12 +18,8 @@ class MovieViewModel : ViewModel() {
     private val _movies = MutableStateFlow<List<Movie>>(emptyList())
     val movies: StateFlow<List<Movie>> = _movies
 
-    private val _userFavorites = MutableStateFlow<List<Int>>(emptyList())
-    val userFavorites: StateFlow<List<Int>> = _userFavorites
-
     init {
         fetchMovies()
-        fetchUserFavorites()
     }
 
     private fun fetchMovies() {
@@ -44,24 +37,6 @@ class MovieViewModel : ViewModel() {
             }
         }
     }
-
-private fun fetchUserFavorites() {
-    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-    val db = FirebaseFirestore.getInstance()
-    val userDocRef = db.collection("users").document(userId)
-
-    userDocRef.addSnapshotListener { snapshot, error ->
-        if (error != null) {
-            Log.e("MovieViewModel", "Error fetching favorites", error)
-            return@addSnapshotListener
-        }
-        if (snapshot != null && snapshot.exists()) {
-            // Cast as List<Long> and convert to Int
-            val favsLong = snapshot.get("favorites") as? List<Long> ?: emptyList()
-            _userFavorites.value = favsLong.map { it.toInt() }
-        }
-    }
-}
 
     fun getMovieById(movieId: Int): StateFlow<Movie?> {
         val movieState = MutableStateFlow<Movie?>(null)
@@ -108,22 +83,7 @@ private fun fetchUserFavorites() {
         }
     }
 
-    fun toggleFavorite(movie: Movie) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val db = FirebaseFirestore.getInstance()
-        val userDocRef = db.collection("users").document(userId)
-        val currentFavs = _userFavorites.value
 
-        if (currentFavs.contains(movie.id)) {
-            userDocRef.update("favorites", FieldValue.arrayRemove(movie.id))
-                .addOnSuccessListener { Log.d("MovieViewModel", "Removed favorite: ${movie.id}") }
-                .addOnFailureListener { e -> Log.e("MovieViewModel", "Error removing favorite", e) }
-        } else {
-            userDocRef.update("favorites", FieldValue.arrayUnion(movie.id))
-                .addOnSuccessListener { Log.d("MovieViewModel", "Added favorite: ${movie.id}") }
-                .addOnFailureListener { e -> Log.e("MovieViewModel", "Error adding favorite", e) }
-        }
-    }
 
 }
 

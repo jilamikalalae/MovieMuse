@@ -12,44 +12,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.moviemuse.R
 import com.example.moviemuse.model.UserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel = viewModel()) {
     var showEditDialog by remember { mutableStateOf(false) }
-
-    val auth = FirebaseAuth.getInstance()
-    val db = FirebaseFirestore.getInstance()
-    val userId = auth.currentUser?.uid
-    var userData by remember { mutableStateOf(UserData("", "", "")) }
-
-    LaunchedEffect(userId) {
-        if (userId != null) {
-            db.collection("users").document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        val name = document.getString("name") ?: ""
-                        val username = document.getString("username") ?: ""
-                        val email = document.getString("email") ?: ""
-                        userData = UserData(name, email, username)
-                    }
-                }
-        }
-    }
+    val userData by userViewModel.userData.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Profile") },
+                title = { Text(text = stringResource(id = R.string.profile)) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black,
-                    titleContentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -57,7 +42,7 @@ fun ProfileScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -72,25 +57,38 @@ fun ProfileScreen(navController: NavHostController) {
 //                    modifier = Modifier
 //                        .fillMaxSize()
 //                        .clip(CircleShape)
-//                        .background(Color.Gray)
+//                        .background(MaterialTheme.colorScheme.surface)
 //                )
 //                IconButton(
 //                    onClick = { /* Add image picker functionality */ },
 //                    modifier = Modifier
 //                        .align(Alignment.BottomEnd)
-//                        .background(Color.White, CircleShape)
+//                        .background(MaterialTheme.colorScheme.primary, CircleShape)
 //                        .size(32.dp)
 //                ) {
-//                    Icon(Icons.Default.Edit, contentDescription = "Edit Profile Picture")
+//                    Icon(
+//                        imageVector = Icons.Default.Edit,
+//                        contentDescription = stringResource(id = R.string.edit_profile_picture),
+//                        tint = MaterialTheme.colorScheme.onPrimary
+//                    )
 //                }
 //            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Profile Info
-            ProfileInfoItem("Name", userData.name)
-            ProfileInfoItem("Username", userData.username)
-            ProfileInfoItem("Email", userData.email)
+            ProfileInfoItem(
+                label = stringResource(id = R.string.name),
+                value = userData?.name ?: ""
+            )
+            ProfileInfoItem(
+                label = stringResource(id = R.string.username),
+                value = userData?.username ?: ""
+            )
+            ProfileInfoItem(
+                label = stringResource(id = R.string.email),
+                value = userData?.email ?: ""
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -98,20 +96,14 @@ fun ProfileScreen(navController: NavHostController) {
             Button(
                 onClick = { showEditDialog = true },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                )
             ) {
-                Text("Edit Profile")
-            }
-
-            // Change Password Button
-            Button(
-                onClick = { /* Add change password functionality */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
-            ) {
-                Text("Change Password")
+                Text(
+                    text = stringResource(id = R.string.edit_profile),
+                    color = MaterialTheme.colorScheme.onError
+                )
             }
 
             // Logout Button
@@ -124,26 +116,40 @@ fun ProfileScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Default.ExitToApp, contentDescription = "Logout")
+                    Icon(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = stringResource(id = R.string.logout),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Logout")
+                    Text(
+                        text = stringResource(id = R.string.logout),
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
                 }
             }
         }
 
         if (showEditDialog) {
             EditProfileDialog(
-                userData = userData,
+                userData = userData ?: UserData("", "", ""),
                 onDismiss = { showEditDialog = false },
                 onSave = { newUserData ->
-                    userData = newUserData
-                    showEditDialog = false
+                    userViewModel.updateProfile(newUserData.name, newUserData.username) { success ->
+                        if (success) {
+                            showEditDialog = false
+                        } else {
+                            showEditDialog = false
+                        }
+                    }
                 }
             )
         }
@@ -160,16 +166,20 @@ fun ProfileInfoItem(label: String, value: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyLarge,
-            color = Color.White
+            color = MaterialTheme.colorScheme.onBackground
         )
-        Divider(color = Color.DarkGray, thickness = 1.dp)
+        Divider(
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+            thickness = 1.dp
+        )
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -180,79 +190,75 @@ fun EditProfileDialog(
 ) {
     var name by remember { mutableStateOf(userData.name) }
     var username by remember { mutableStateOf(userData.username) }
-    var email by remember { mutableStateOf(userData.email) }
+    val email = userData.email
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit Profile") },
+        title = { Text(text = stringResource(id = R.string.edit_profile)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(id = R.string.name)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.Red,
-                        unfocusedBorderColor = Color.White,
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.White
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 OutlinedTextField(
                     value = username,
                     onValueChange = { username = it },
-                    label = { Text("Username") },
+                    label = { Text(stringResource(id = R.string.username)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.Red,
-                        unfocusedBorderColor = Color.White,
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.White
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onBackground
                     )
                 )
                 OutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
+                    onValueChange = { /* Read-only field: no changes allowed */ },
+                    label = { Text(stringResource(id = R.string.email)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
+                    enabled = false, // Disable editing for email
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.Red,
-                        unfocusedBorderColor = Color.White,
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.White
+                        disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
         },
         confirmButton = {
             TextButton(
-                onClick = {
-                    onSave(UserData(name, email, username))
-                }
+                onClick = { onSave(UserData(name, email, username)) }
             ) {
-                Text("Save", color = Color.White)
+                Text(text = stringResource(id = R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.White)
+                Text(text = stringResource(id = R.string.cancel))
             }
         },
-        containerColor = Color(0xFF1E1E1E),
-        titleContentColor = Color.White,
-        textContentColor = Color.White
+        containerColor = MaterialTheme.colorScheme.surface,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        textContentColor = MaterialTheme.colorScheme.onSurface
     )
 }
