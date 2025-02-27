@@ -48,31 +48,31 @@ fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Profile Picture
-            Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .padding(8.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surface)
-                )
-                IconButton(
-                    onClick = { /* Add image picker functionality */ },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .background(MaterialTheme.colorScheme.primary, CircleShape)
-                        .size(32.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(id = R.string.edit_profile_picture),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
+//            Box(
+//                modifier = Modifier
+//                    .size(120.dp)
+//                    .padding(8.dp)
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .clip(CircleShape)
+//                        .background(MaterialTheme.colorScheme.surface)
+//                )
+//                IconButton(
+//                    onClick = { /* Add image picker functionality */ },
+//                    modifier = Modifier
+//                        .align(Alignment.BottomEnd)
+//                        .background(MaterialTheme.colorScheme.primary, CircleShape)
+//                        .size(32.dp)
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.Edit,
+//                        contentDescription = stringResource(id = R.string.edit_profile_picture),
+//                        tint = MaterialTheme.colorScheme.onPrimary
+//                    )
+//                }
+//            }
 
             Spacer(modifier = Modifier.height(24.dp))
 

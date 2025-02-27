@@ -55,8 +55,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import screens.FavoritesScreen
 import screens.SearchScreen
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.example.moviemuse.utils.authenticateUser
+import androidx.compose.ui.platform.LocalContext
+import com.example.moviemuse.utils.authenticateUser
+import android.content.ContextWrapper
+import androidx.fragment.app.FragmentActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun attachBaseContext(newBase: Context?) {
 
         val context = newBase?.let { com.example.moviemuse.LocaleManager.setLocale(it) }
@@ -101,6 +108,7 @@ fun MainScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val configuration = LocalConfiguration.current
     val halfScreenWidth = (configuration.screenWidthDp.dp * 0.7f)
@@ -133,7 +141,7 @@ fun MainScreen(
             },
             bottomBar = {
                 if (currentRoute in listOf("home", "favorites", "search", "profile")) {
-                    BottomNavBar(navController)
+                    BottomNavBar(navController, context)
                 }
             }
         ) { innerPadding ->
@@ -255,12 +263,23 @@ fun DrawerContent(
     }
 }
 
+fun getFragmentActivity(context: Context): FragmentActivity? {
+    var ctx = context
+    while (ctx is ContextWrapper) {
+        if (ctx is FragmentActivity) return ctx  // ✅ Ensure we get a FragmentActivity
+        ctx = ctx.baseContext
+    }
+    return null
+}
 
 
 @Composable
-fun BottomNavBar(navController: NavHostController) {
+fun BottomNavBar(navController: NavHostController, context: Context) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val context = LocalContext.current  // ✅ Retrieve context inside a Composable
+    val activity = getFragmentActivity(context)
+
 
     NavigationBar {
         NavigationBarItem(
@@ -312,20 +331,29 @@ fun BottomNavBar(navController: NavHostController) {
             }
         )
         NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = stringResource(id = R.string.profile)
-                )
-            },
-            label = { Text(stringResource(id = R.string.profile)) },
-            selected = currentRoute == "profile",
+            icon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Profile") },
+            label = { Text("Profile") },
+            selected = navController.currentBackStackEntryAsState().value?.destination?.route == "profile",
             onClick = {
-                navController.navigate("profile") {
-                    launchSingleTop = true
-                    popUpTo("home") { saveState = true }
+                if (activity != null) {
+                    authenticateUser(
+                        context = activity,
+                        onAuthenticated = {
+                            navController.navigate("profile") {
+                                launchSingleTop = true
+                                popUpTo("home") { saveState = true }
+                            }
+                        },
+                        onFailed = {
+                            Toast.makeText(activity, "Biometric authentication failed", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                } else {
+                    Toast.makeText(context, "Error: Unable to get activity context", Toast.LENGTH_SHORT).show()
                 }
             }
         )
+
+
     }
 }
