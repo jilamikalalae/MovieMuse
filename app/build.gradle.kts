@@ -95,6 +95,8 @@ dependencies {
 
     implementation ("androidx.compose.foundation:foundation:1.5.1")
 
+    implementation ("androidx.biometric:biometric:1.2.0-alpha05")
+
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
