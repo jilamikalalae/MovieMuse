@@ -2,7 +2,6 @@ package viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.UserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -64,27 +63,27 @@ class UserViewModel : ViewModel() {
             }
     }
 
-    fun toggleFavorite(movie: Movie) {
+    fun toggleFavorite(movieId: Int) {
         val userId = auth.currentUser?.uid ?: return
         val userDocRef = db.collection("users").document(userId)
         val currentFavs = _userFavorites.value
 
-        if (currentFavs.contains(movie.id)) {
-            userDocRef.update("favorites", FieldValue.arrayRemove(movie.id))
+        if (currentFavs.contains(movieId)) {
+            userDocRef.update("favorites", FieldValue.arrayRemove(movieId))
                 .addOnSuccessListener {
-                    Log.d("UserViewModel", "Removed favorite: ${movie.id}")
+                    Log.d("UserViewModel", "Removed favorite: $movieId")
                 }
                 .addOnFailureListener { e ->
                     Log.e("UserViewModel", "Error removing favorite", e)
                 }
         } else {
-            userDocRef.update("favorites", FieldValue.arrayUnion(movie.id))
+            userDocRef.update("favorites", FieldValue.arrayUnion(movieId))
                 .addOnSuccessListener {
-                    Log.d("UserViewModel", "Added favorite: ${movie.id}")
+                    Log.d("UserViewModel", "Added favorite: $movieId")
                 }
                 .addOnFailureListener { e ->
                     Log.e("UserViewModel", "Error adding favorite", e)
                 }
         }
     }
-}
+    }

@@ -6,8 +6,14 @@ data class Movie(
     val id: Int,
     val title: String,
     val overview: String,
-    @SerializedName("poster_path")  // Map JSON field "poster_path" to "posterPath"
+    @SerializedName("poster_path")
     val posterPath: String,
 
-    val rating: Double // added field for rating
-)
+    val rating: Double,
+
+    val genre: String? = "Unknown"
+) {
+
+    val imageUrl: String
+        get() = "https://image.tmdb.org/t/p/w500$posterPath"
+}

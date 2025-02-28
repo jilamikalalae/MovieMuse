@@ -101,7 +101,8 @@ fun SearchScreen(
                         movie = movie,
                         navController = navController,
                         isFavorite = userFavorites.contains(movie.id),
-                        onFavoriteToggle = {userViewModel.toggleFavorite(movie)}
+                        onFavoriteToggle = { userViewModel.toggleFavorite(movie.id) } // ✅ ส่งเฉพาะ movie.id (Int)
+
                     )
                 }
             }

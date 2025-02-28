@@ -72,7 +72,8 @@ fun FavoritesScreen(
                         movie = movie,
                         navController = navController,
                         isFavorite = true,
-                        onFavoriteToggle = { userViewModel.toggleFavorite(movie) }
+                        onFavoriteToggle = { userViewModel.toggleFavorite(movie.id) }
+
                     )
                 }
             }

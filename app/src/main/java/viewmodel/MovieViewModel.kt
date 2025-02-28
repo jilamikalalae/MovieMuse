@@ -27,6 +27,13 @@ class MovieViewModel : ViewModel() {
     private val _trailers = MutableStateFlow<List<Trailer>>(emptyList())
     val trailers: StateFlow<List<Trailer>> = _trailers
 
+    private val _selectedGenre = MutableStateFlow<String?>(null)  // ✅ แก้เป็น String?
+    val selectedGenre: StateFlow<String?> = _selectedGenre
+
+    fun setGenre(genre: String?) {  // ✅ เพิ่มฟังก์ชัน setGenre()
+        _selectedGenre.value = genre
+    }
+
     init {
         fetchMovies()
     }
@@ -61,7 +68,6 @@ class MovieViewModel : ViewModel() {
         return movieState
     }
 
-
     fun getReviews(movieId: Int) {
         viewModelScope.launch {
             // Fetch reviews from Firestore
@@ -78,7 +84,6 @@ class MovieViewModel : ViewModel() {
                 emptyList()
             }
 
-
             // Fetch reviews from TMDB
             val tmdbReviews = try {
                 repository.fetchMovieReviews(movieId) ?: emptyList()
@@ -86,7 +91,6 @@ class MovieViewModel : ViewModel() {
                 Log.e("MovieViewModel", "Error fetching TMDB reviews", e)
                 emptyList()
             }
-
 
             Log.d("Movies Reviews", tmdbReviews.toString())
 
