@@ -1,14 +1,12 @@
 package viewmodel
 
+import android.app.Application
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviemuse.MovieMuseApplication
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.UserData
-import com.example.moviemuse.repository.RecentRepository
-import com.example.moviemuse.roomDb.MovieDao
-import com.example.moviemuse.roomDb.MovieDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class UserViewModel : ViewModel() {
+class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -26,6 +24,9 @@ class UserViewModel : ViewModel() {
     // Update favorites: Firestore may store numeric values as Longs, so we convert them to Ints.
     private val _userFavorites = MutableStateFlow<List<Int>>(emptyList())
     val userFavorites: StateFlow<List<Int>> = _userFavorites
+
+    // Get the app lifecycle observer from the application
+    private val appLifecycleObserver = (application as MovieMuseApplication).lifecycleObserver
 
     init {
         fetchUserData()
@@ -76,6 +77,7 @@ class UserViewModel : ViewModel() {
         val currentFavs = _userFavorites.value
 
         if (currentFavs.contains(movie.id)) {
+            // Remove from favorites
             userDocRef.update("favorites", FieldValue.arrayRemove(movie.id))
                 .addOnSuccessListener {
                     Log.d("UserViewModel", "Removed favorite: ${movie.id}")
@@ -84,13 +86,32 @@ class UserViewModel : ViewModel() {
                     Log.e("UserViewModel", "Error removing favorite", e)
                 }
         } else {
+            // Add to favorites
             userDocRef.update("favorites", FieldValue.arrayUnion(movie.id))
                 .addOnSuccessListener {
                     Log.d("UserViewModel", "Added favorite: ${movie.id}")
+                    // Track this movie for notification when app closes
+                    try {
+                        Log.d("UserViewModel", "Attempting to send notification for: ${movie.title}")
+                        appLifecycleObserver.setLastAddedToWatchlist(movie)
+                    } catch (e: Exception) {
+                        Log.e("UserViewModel", "Error setting movie for notification", e)
+                    }
                 }
                 .addOnFailureListener { e ->
                     Log.e("UserViewModel", "Error adding favorite", e)
                 }
+        }
+
+        // For immediate testing, also try to trigger notification directly
+        // This is a backup in case the Firestore operation is slow
+        if (!currentFavs.contains(movie.id)) {
+            try {
+                Log.d("UserViewModel", "Direct notification attempt for: ${movie.title}")
+                appLifecycleObserver.setLastAddedToWatchlist(movie)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error in direct notification", e)
+            }
         }
     }
 }

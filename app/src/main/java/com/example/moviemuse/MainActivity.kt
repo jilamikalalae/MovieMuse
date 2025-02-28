@@ -62,6 +62,11 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.moviemuse.utils.authenticateUser
 import android.content.ContextWrapper
 import androidx.fragment.app.FragmentActivity
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class MainActivity : FragmentActivity() {
     override fun attachBaseContext(newBase: Context?) {
@@ -98,6 +103,27 @@ class MainActivity : FragmentActivity() {
                 )
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermission()
+        }
+    }
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_CODE
+                )
+            }
+        }
+    }
+    companion object {
+        const val NOTIFICATION_PERMISSION_CODE = 100
     }
 }
 
@@ -349,15 +375,21 @@ fun BottomNavBar(navController: NavHostController, context: Context) {
                             }
                         },
                         onFailed = {
-                            Toast.makeText(activity, "Biometric authentication failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                activity,
+                                "Biometric authentication failed",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     )
                 } else {
-                    Toast.makeText(context, "Error: Unable to get activity context", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Error: Unable to get activity context",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         )
-
-
     }
 }
