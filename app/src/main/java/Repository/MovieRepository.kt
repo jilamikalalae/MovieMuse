@@ -58,5 +58,29 @@ class MovieRepository {
         }
     }
 
+    suspend fun searchMovie(keyword: String): List<Movie> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = movieApiService.searchMovie( BuildConfig.TMDB_API_KEY,1,keyword)
+                response.results
+            } catch (e: Exception) {
+                Log.e("MovieRepository", "Error search movie", e)
+                emptyList()
+            }
+        }
+    }
+
+    suspend fun getMovieById(movieId: Int): Movie? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = movieApiService.getMovieDetail( movieId,BuildConfig.TMDB_API_KEY)
+                response
+            } catch (e: Exception) {
+                Log.e("MovieRepository", "Error get movie by id", e)
+                null
+            }
+        }
+    }
+
 
 }

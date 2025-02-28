@@ -1,6 +1,7 @@
 package com.example.moviemuse.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviemuse.BuildConfig
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.Review
+import com.example.moviemuse.roomDb.MovieDao
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -47,12 +49,31 @@ class MovieViewModel : ViewModel() {
         }
     }
 
+
+    fun searchMovie(query: String) {
+        viewModelScope.launch {
+            try {
+                val searchMovies = repository.searchMovie(query) ?: emptyList()
+                val updatedMovies = searchMovies.map { movie ->
+                    movie.copy(posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath)
+                }
+                _movies.value = updatedMovies
+
+            } catch (e: Exception) {
+                Log.e("MovieViewModel", "Error searching movies $e", e)
+            }
+        }
+    }
+
     fun getMovieById(movieId: Int): StateFlow<Movie?> {
         val movieState = MutableStateFlow<Movie?>(null)
 
         viewModelScope.launch {
             try {
-                val movie = _movies.value.find { it.id == movieId }
+                val movie = repository.getMovieById(movieId) // Call API to fetch movie details
+                if (movie != null) {
+                    movie.posterPath = BuildConfig.TMDB_BASE_IMAGE_URL + movie.posterPath
+                }
                 movieState.value = movie
             } catch (e: Exception) {
                 Log.e("MovieViewModel", "Error fetching movie details", e)
