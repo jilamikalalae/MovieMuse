@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +33,8 @@ import androidx.navigation.navArgument
 import com.example.moviemuse.screens.LoginScreen
 import com.example.moviemuse.screens.RegisterScreen
 import com.example.moviemuse.screens.ReviewScreen
+import com.example.moviemuse.utils.authenticateUser
+import com.example.moviemuse.utils.getFragmentActivity
 
 class MainActivity : FragmentActivity() {
     override fun attachBaseContext(newBase: Context?) {
@@ -204,6 +207,7 @@ fun DrawerContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavBar(navController: NavHostController,context: Context) {
+    val activity = getFragmentActivity(context)
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     NavigationBar {
         NavigationBarItem(
@@ -244,10 +248,27 @@ fun BottomNavBar(navController: NavHostController,context: Context) {
             label = { Text("Profile") },
             selected = currentRoute == "profile",
             onClick = {
-                navController.navigate("profile") {
-                    launchSingleTop = true
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
+                if (activity != null) {
+                    authenticateUser(
+                        context = activity,
+                        onAuthenticated = {
+                            navController.navigate("profile") {
+                                launchSingleTop = true
+                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            }
+                        },
+                        onFailed = {
+                            Toast.makeText(activity, "Biometric authentication failed", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Error: Unable to get activity context",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
             }
         )
     }
