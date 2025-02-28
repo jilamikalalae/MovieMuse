@@ -21,9 +21,10 @@ fun LoginScreen(navController: NavHostController) {
 
     val context = LocalContext.current
     val auth = FirebaseAuth.getInstance()
-
-    var email by remember { mutableStateOf("jeffrey@gmail.com") }
-    var password by remember { mutableStateOf("jeffrey1234") }
+//    var email by remember { mutableStateOf("jeffrey@gmail.com") }
+//    var password by remember { mutableStateOf("jeffrey1234") }
+    var email by remember { mutableStateOf("" )}
+    var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     Column(

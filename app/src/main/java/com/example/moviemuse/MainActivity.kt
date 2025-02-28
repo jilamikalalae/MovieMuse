@@ -27,6 +27,11 @@ import com.example.moviemuse.ui.theme.MovieMuseTheme
 import androidx.fragment.app.FragmentActivity
 import com.example.moviemuse.screens.ProfileScreen
 import androidx.compose.ui.Alignment
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.moviemuse.screens.LoginScreen
+import com.example.moviemuse.screens.RegisterScreen
+import com.example.moviemuse.screens.ReviewScreen
 
 class MainActivity : FragmentActivity() {
     override fun attachBaseContext(newBase: Context?) {
@@ -78,10 +83,13 @@ fun MainScreen(
     val scope = rememberCoroutineScope()
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val context = LocalContext.current
 
     LaunchedEffect(isLandscape) {
         if (isLandscape) drawerState.open() else drawerState.close()
     }
+
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -97,15 +105,43 @@ fun MainScreen(
         }
     ) {
         Scaffold(
-            topBar = { MyTopAppBar(scope, drawerState) },
-            bottomBar = { BottomNavBar(navController) }
+            topBar = {
+                if (currentRoute != "login" && currentRoute != "register") {
+                    MyTopAppBar(scope, drawerState)
+                }
+            },
+            bottomBar = {
+                if (currentRoute in listOf("home", "favorites", "search", "profile")) {
+                    BottomNavBar(navController, context)
+                }
+            }
         ) { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                NavHost(navController = navController, startDestination = "home") {
+                NavHost(
+                    navController = navController,
+                    startDestination = "login",
+                    modifier = Modifier.padding(innerPadding)
+                ) {
+                    composable("login") { LoginScreen(navController) }
+                    composable("register") { RegisterScreen(navController) }
                     composable("home") { MovieListScreen(navController) }
                     composable("favorites") { FavoritesScreen(navController) }
                     composable("search") { SearchScreen(navController) }
-                    composable("profile") { ProfileScreen(navController) }  
+                    composable("profile") { ProfileScreen(navController) }
+                    composable(
+                        "movieDetail/{movieId}",
+                        arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                        MovieDetailScreen(movieId, navController)
+                    }
+                    composable(
+                        "movieReviews/{movieId}",
+                        arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                        ReviewScreen(movieId = movieId, navController = navController)
+                    }
                 }
             }
         }
@@ -167,7 +203,7 @@ fun DrawerContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomNavBar(navController: NavHostController) {
+fun BottomNavBar(navController: NavHostController,context: Context) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     NavigationBar {
         NavigationBarItem(
