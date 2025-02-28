@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
@@ -29,13 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.moviemuse.viewmodel.MovieViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviemuse.R
 import viewmodel.UserViewModel
-
 @Composable
 fun SearchScreen(
     navController: NavHostController,
@@ -46,12 +48,6 @@ fun SearchScreen(
     val userFavorites by userViewModel.userFavorites.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
-
-    val filteredMovies = if (searchQuery.isBlank()) {
-        movies
-    } else {
-        movies.filter { it.title.contains(searchQuery, ignoreCase = true) }
-    }
 
     Column(
         modifier = Modifier
@@ -76,12 +72,22 @@ fun SearchScreen(
                 unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                 cursorColor = MaterialTheme.colorScheme.primary
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth(),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    movieViewModel.searchMovie(searchQuery)
+                }
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if(filteredMovies.isEmpty()){
+        if (movies.isEmpty()) {
             Text(
                 text = stringResource(id = R.string.no_movies_found),
                 style = MaterialTheme.typography.bodyLarge,
@@ -96,18 +102,16 @@ fun SearchScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(filteredMovies) { movie ->
+                items(movies) { movie ->
                     MoviePosterCard(
                         movie = movie,
                         navController = navController,
                         isFavorite = userFavorites.contains(movie.id),
-                        onFavoriteToggle = { userViewModel.toggleFavorite(movie.id) } // ✅ ส่งเฉพาะ movie.id (Int)
-
+                        onFavoriteToggle = { userViewModel.toggleFavorite(movie.id) }
                     )
                 }
             }
         }
     }
 }
-
 
