@@ -67,6 +67,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.compose.material.icons.filled.Close
+import androidx.activity.compose.BackHandler
+
+
 
 class MainActivity : FragmentActivity() {
     override fun attachBaseContext(newBase: Context?) {
@@ -136,22 +140,24 @@ fun MainScreen(
     isThaiLanguage: Boolean,
     onLanguageToggle: () -> Unit
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    val configuration = LocalConfiguration.current
-    val halfScreenWidth = (configuration.screenWidthDp.dp * 0.7f)
 
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
+    // ✅ ใช้ `BackHandler` ให้แน่ใจว่าทำงานได้
+    BackHandler(enabled = drawerState.isOpen) {
+        scope.launch { drawerState.close() }
+    }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(halfScreenWidth)
+                    .width(250.dp)
                     .background(MaterialTheme.colorScheme.surface)
             ) {
                 DrawerContent(
@@ -159,6 +165,7 @@ fun MainScreen(
                     onThemeToggle = onThemeToggle,
                     isThaiLanguage = isThaiLanguage,
                     onLanguageToggle = onLanguageToggle,
+                    onCloseDrawer = { scope.launch { drawerState.close() } }
                 )
             }
         }
@@ -171,43 +178,45 @@ fun MainScreen(
             },
             bottomBar = {
                 if (currentRoute in listOf("home", "favorites", "search", "profile")) {
-                    BottomNavBar(navController, context)
+                    BottomNavBar(navController, LocalContext.current)
                 }
             }
         ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = "login",
-                modifier = Modifier.padding(innerPadding)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        if (drawerState.isOpen) {
+                            scope.launch { drawerState.close() }
+                        }
+                    }
             ) {
-                composable("login") { LoginScreen(navController) }
-                composable("register") { RegisterScreen(navController) }
-                composable("home") { MovieListScreen(navController) }
-                composable("favorites") { FavoritesScreen(navController) }
-                composable("search") { SearchScreen(navController) }
-                composable("profile") { ProfileScreen(navController) }
-                composable(
-                    "movieDetail/{movieId}",
-                    arguments = listOf(navArgument("movieId") { type = NavType.IntType })
-                ) { backStackEntry ->
-                    val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-                    MovieDetailScreen(movieId, navController)
-                }
-                composable(
-                    "movieReviews/{movieId}",
-                    arguments = listOf(navArgument("movieId") { type = NavType.IntType })
-                ) { backStackEntry ->
-                    val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-                    ReviewScreen(movieId = movieId, navController = navController)
+                NavHost(
+                    navController = navController,
+                    startDestination = "login",
+                    modifier = Modifier.padding(innerPadding)
+                ) {
+                    composable("login") { LoginScreen(navController) }
+                    composable("register") { RegisterScreen(navController) }
+                    composable("home") { MovieListScreen(navController) }
+                    composable("favorites") { FavoritesScreen(navController) }
+                    composable("search") { SearchScreen(navController) }
+                    composable("profile") { ProfileScreen(navController) }
                 }
             }
         }
     }
 }
 
+
+
+
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(scope:  CoroutineScope, drawerState: DrawerState) {
+fun MyTopAppBar(scope: CoroutineScope, drawerState: DrawerState) {
     TopAppBar(
         title = { Text(text = "MOVIEMUSE") },
         navigationIcon = {
@@ -220,18 +229,28 @@ fun MyTopAppBar(scope:  CoroutineScope, drawerState: DrawerState) {
     )
 }
 
+
+
 @Composable
 fun DrawerContent(
     isLightTheme: Boolean,
     onThemeToggle: () -> Unit,
     isThaiLanguage: Boolean,
     onLanguageToggle: () -> Unit,
+    onCloseDrawer: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        IconButton(
+            onClick = onCloseDrawer,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Icon(imageVector = Icons.Default.Close, contentDescription = "Close Drawer")
+        }
+
         Text(
             text = stringResource(id = R.string.settings),
             style = MaterialTheme.typography.headlineMedium,
@@ -292,6 +311,10 @@ fun DrawerContent(
         }
     }
 }
+
+
+
+
 
 fun getFragmentActivity(context: Context): FragmentActivity? {
     var ctx = context
