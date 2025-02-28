@@ -1,36 +1,28 @@
 package screens
 
 import Components.MoviePosterCard
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*  // Ensure you're using Material 3
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviemuse.viewmodel.MovieViewModel
 import com.example.moviemuse.model.Movie
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import androidx.compose.foundation.clickable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.navigation.NavHostController
 import com.example.moviemuse.R
 import viewmodel.UserViewModel
 
 @Composable
-fun MovieListScreen(navController: NavHostController, movieViewModel: MovieViewModel = viewModel(),
-                    userViewModel: UserViewModel = viewModel()) {
+fun MovieListScreen(
+    navController: NavHostController,
+    movieViewModel: MovieViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel()
+) {
     val movies by movieViewModel.movies.collectAsState(initial = emptyList())
     val userFavorites by userViewModel.userFavorites.collectAsState()
 
@@ -48,22 +40,22 @@ fun MovieListScreen(navController: NavHostController, movieViewModel: MovieViewM
             title = stringResource(id = R.string.trending_now),
             movies = trendingMovies,
             navController = navController,
-            viewModel = userViewModel,
-            userFavorites = userFavorites
+            userFavorites = userFavorites,
+            onFavoriteToggle = { movie -> userViewModel.toggleFavorite(movie) }
         )
         MovieCategorySection(
             title = stringResource(id = R.string.new_release),
             movies = newReleaseMovies,
             navController = navController,
-            viewModel = userViewModel,
-            userFavorites = userFavorites
+            userFavorites = userFavorites,
+            onFavoriteToggle = { movie -> userViewModel.toggleFavorite(movie) }
         )
         MovieCategorySection(
             title = stringResource(id = R.string.anime),
             movies = animeMovies,
             navController = navController,
-            viewModel = userViewModel,
-            userFavorites = userFavorites
+            userFavorites = userFavorites,
+            onFavoriteToggle = { movie -> userViewModel.toggleFavorite(movie) }
         )
     }
 }
@@ -73,8 +65,8 @@ fun MovieCategorySection(
     title: String,
     movies: List<Movie>,
     navController: NavHostController,
-    viewModel: UserViewModel,
-    userFavorites: List<Int>
+    userFavorites: List<Int>,
+    onFavoriteToggle: (Movie) -> Unit
 ) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(
@@ -93,10 +85,11 @@ fun MovieCategorySection(
                     movie = movie,
                     navController = navController,
                     isFavorite = userFavorites.contains(movie.id),
-                    onFavoriteToggle = { viewModel.toggleFavorite(movie) }
+                    onFavoriteToggle = { onFavoriteToggle(movie) } // Now passed from MovieListScreen
                 )
             }
         }
     }
 }
+
 
