@@ -105,7 +105,7 @@ fun MainScreen(
                     composable("home") { MovieListScreen(navController) }
                     composable("favorites") { FavoritesScreen(navController) }
                     composable("search") { SearchScreen(navController) }
-                    composable("profile") { ProfileScreen(navController) }  /
+                    composable("profile") { ProfileScreen(navController) }  
                 }
             }
         }
