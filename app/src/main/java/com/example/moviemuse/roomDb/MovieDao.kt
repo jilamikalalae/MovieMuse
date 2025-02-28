@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.moviemuse.model.Movie
 
@@ -12,9 +13,9 @@ interface MovieDao {
     @Query("SELECT * FROM Movie")
     fun getAll(): LiveData<List<Movie>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(movie: Movie)
 
-    @Delete
+    @Query("DELETE FROM Movie")
     fun deleteAll()
 }

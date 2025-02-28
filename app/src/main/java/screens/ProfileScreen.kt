@@ -18,13 +18,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.moviemuse.R
 import com.example.moviemuse.model.UserData
+import com.example.moviemuse.viewmodel.RecentMovieViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import viewmodel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel = viewModel()) {
+fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel = viewModel(),recentMovieViewModel: RecentMovieViewModel = viewModel()) {
     var showEditDialog by remember { mutableStateOf(false) }
     val userData by userViewModel.userData.collectAsState()
 
@@ -109,6 +110,7 @@ fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel
             // Logout Button
             Button(
                 onClick = {
+                    recentMovieViewModel.deleteAllMovies() // ✅ Delete all movies from Room
                     navController.navigate("login") {
                         popUpTo("home") { inclusive = true }
                     }

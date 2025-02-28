@@ -31,7 +31,8 @@ fun MoviePosterCard(
     movie: Movie,
     navController: NavHostController,
     isFavorite: Boolean = false,
-    onFavoriteToggle: () -> Unit = {}
+    onFavoriteToggle: () -> Unit = {},
+    onClick: () -> Unit = {} // ✅ Added onClick parameter
 ) {
     Card(
         modifier = Modifier
@@ -51,7 +52,10 @@ fun MoviePosterCard(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable { navController.navigate("movieDetail/${movie.id}") }
+                    .clickable {
+                        onClick() // ✅ Store in Room database when clicked
+                        navController.navigate("movieDetail/${movie.id}")
+                    }
             )
             Icon(
                 imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

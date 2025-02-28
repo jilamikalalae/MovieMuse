@@ -1,14 +1,20 @@
 package viewmodel
 
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.moviemuse.model.Movie
 import com.example.moviemuse.model.UserData
+import com.example.moviemuse.repository.RecentRepository
+import com.example.moviemuse.roomDb.MovieDao
+import com.example.moviemuse.roomDb.MovieDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class UserViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()

@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,17 +38,22 @@ import androidx.navigation.NavHostController
 import com.example.moviemuse.viewmodel.MovieViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviemuse.R
+import com.example.moviemuse.viewmodel.RecentMovieViewModel
 import viewmodel.UserViewModel
 @Composable
 fun SearchScreen(
     navController: NavHostController,
+    recentViewModel:RecentMovieViewModel = viewModel(),
     movieViewModel: MovieViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel()
 ) {
+    val storedMovies by recentViewModel.storedMovies.observeAsState(emptyList())
     val movies by movieViewModel.movies.collectAsState(initial = emptyList())
     val userFavorites by userViewModel.userFavorites.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
+
+    val displayedMovies = if (searchQuery.isBlank()) storedMovies else movies
 
     Column(
         modifier = Modifier
@@ -57,7 +63,10 @@ fun SearchScreen(
     ) {
         OutlinedTextField(
             value = searchQuery,
-            onValueChange = { searchQuery = it },
+            onValueChange = {
+                searchQuery = it
+                movieViewModel.searchMovie(it)
+            },
             label = { Text(text = stringResource(id = R.string.search)) },
             leadingIcon = {
                 Icon(
@@ -66,14 +75,8 @@ fun SearchScreen(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = MaterialTheme.colorScheme.onSurface,
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = Modifier
-                .fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(),
+            modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search
@@ -87,7 +90,7 @@ fun SearchScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (movies.isEmpty()) {
+        if (displayedMovies.isEmpty()) {
             Text(
                 text = stringResource(id = R.string.no_movies_found),
                 style = MaterialTheme.typography.bodyLarge,
@@ -102,12 +105,13 @@ fun SearchScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(movies) { movie ->
+                items(displayedMovies) { movie ->
                     MoviePosterCard(
                         movie = movie,
                         navController = navController,
                         isFavorite = userFavorites.contains(movie.id),
-                        onFavoriteToggle = { userViewModel.toggleFavorite(movie) }
+                        onFavoriteToggle = { userViewModel.toggleFavorite(movie) },
+                        onClick = { recentViewModel.addMovieToDb(movie) } // Store when clicked
                     )
                 }
             }
