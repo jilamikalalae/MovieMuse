@@ -50,13 +50,13 @@ fun MovieListScreen(
             userFavorites = userFavorites,
             onFavoriteToggle = { movie -> userViewModel.toggleFavorite(movie) }
         )
-        MovieCategorySection(
-            title = stringResource(id = R.string.anime),
-            movies = animeMovies,
-            navController = navController,
-            userFavorites = userFavorites,
-            onFavoriteToggle = { movie -> userViewModel.toggleFavorite(movie) }
-        )
+//        MovieCategorySection(
+//            title = stringResource(id = R.string.anime),
+//            movies = animeMovies,
+//            navController = navController,
+//            userFavorites = userFavorites,
+//            onFavoriteToggle = { movie -> userViewModel.toggleFavorite(movie) }
+//        )
     }
 }
 
