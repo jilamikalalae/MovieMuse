@@ -202,6 +202,20 @@ fun MainScreen(
                     composable("favorites") { FavoritesScreen(navController) }
                     composable("search") { SearchScreen(navController) }
                     composable("profile") { ProfileScreen(navController) }
+                    composable(
+                        "movieDetail/{movieId}",
+                        arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                        MovieDetailScreen(movieId, navController)
+                    }
+                    composable(
+                        "movieReviews/{movieId}",
+                        arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+                    ) { backStackEntry ->
+                        val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+                        ReviewScreen(movieId = movieId, navController = navController)
+                    }
                 }
             }
         }
